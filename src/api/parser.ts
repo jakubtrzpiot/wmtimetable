@@ -1,5 +1,6 @@
 import {parse} from 'himalaya';
 import {WM_URL} from './constants';
+import {transpose} from '../utils/helpers';
 import Timetable from '../interfaces/parser.interfaces';
 
 const parseTimetable = async (course: string): Promise<Timetable> => {
@@ -25,11 +26,24 @@ const parseTimetable = async (course: string): Promise<Timetable> => {
         .slice(1)
         .map((row: any) => row[1].replace(/(\s)/gm, '').split('-'));
 
-      const days = table;
+      const days = transpose(table)
+        .slice(2)
+        .map((el: any) => {
+          return {
+            day: el[0],
+            lessons: el.slice(1).map((subject: any, i: number) => {
+              return {
+                time: {start: hours[i][0], end: hours[i][1]},
+                subject: !subject ? null : subject,
+                // teacher: teacher,
+                // room: room,
+              };
+            }),
+          };
+        });
 
       const timetable: Timetable = {
         course: course,
-        hours: hours,
         days: days,
       };
 

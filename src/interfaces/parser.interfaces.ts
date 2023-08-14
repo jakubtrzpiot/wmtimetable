@@ -1,19 +1,18 @@
 export default interface Timetable {
   course: string;
-  hours: Hour[];
   days: Day[];
 }
 
-interface Hour {
+interface Time {
   start: string;
   end: string;
 }
 
 interface Lesson {
-  time: string;
+  time: Time;
   subject: string;
-  teacher: string;
-  room: string;
+  // teacher: string;
+  // room: string;
 }
 
 interface Day {
