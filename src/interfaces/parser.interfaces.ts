@@ -1,4 +1,4 @@
-export default interface Timetable {
+export interface Timetable {
   course: string;
   days: Day[];
 }
@@ -8,14 +8,16 @@ interface Time {
   end: string;
 }
 
-interface Lesson {
-  time: Time;
-  subject: string;
-  // teacher: string;
-  // room: string;
-}
-
-interface Day {
+export interface Day {
   day: string;
   lessons: Lesson[];
+}
+
+export interface Lesson {
+  time: Time;
+  subject: {
+    name: string;
+    teacher?: string;
+    room?: string;
+  };
 }

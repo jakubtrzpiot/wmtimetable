@@ -1,7 +1,7 @@
 import {parse} from 'himalaya';
 import {WM_URL} from './constants';
 import {transpose} from '../utils/helpers';
-import Timetable from '../interfaces/parser.interfaces';
+import {Timetable} from '../interfaces/parser.interfaces';
 
 const parseTimetable = async (course: number): Promise<Timetable> => {
   return await fetch(`${WM_URL}${course.toString()}.html`)
