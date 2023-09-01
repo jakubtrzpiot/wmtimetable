@@ -1,7 +1,7 @@
 import {parse} from 'himalaya';
 import {WM_URL} from '../constants';
 import {transpose} from './helpers';
-import TimetableProps from '../types/timetable.types';
+import {TimetableProps, Period} from '../types/timetable.types';
 
 const parseTimetable = async (course: number): Promise<TimetableProps> => {
   return await fetch(`${WM_URL}${course}.html`)
@@ -37,21 +37,25 @@ const parseTimetable = async (course: number): Promise<TimetableProps> => {
       const days = transpose(table)
         .slice(2)
         .map((day: any) => {
+          let [subject, teacher, room] = [null, null, null];
+          console.log(day[0]);
           return {
             day: day[0],
-            periods: day.slice(1).map((subject: any, i: number) => {
-              subject && Array.isArray(subject)
-                ? (subject = {
-                    name: subject[0],
-                    teacher: subject[2],
-                    room: subject[4],
-                  })
-                : subject
-                ? (subject = {name: subject})
+            periods: day.slice(1).map((period: Array<any>, i: number) => {
+              console.log(period);
+              period && Array.isArray(period)
+                ? ((subject = period[0]),
+                  (teacher = period[2]),
+                  (room = period[4]))
+                : period
+                ? (subject = period)
                 : null;
               return {
-                time: {start: hours[i][0], end: hours[i][1]},
+                start: hours[i][0],
+                end: hours[i][1],
                 subject: subject,
+                teacher: teacher,
+                room: room,
               };
             }),
           };

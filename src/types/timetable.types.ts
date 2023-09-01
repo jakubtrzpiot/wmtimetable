@@ -7,21 +7,15 @@ export type TimetableTemplateProps = {
   periods: Period[];
 };
 
-type Time = {
-  start: string;
-  end: string;
-};
-
 export type Day = {
   day: string;
   periods: Period[];
 };
 
 export type Period = {
-  time: Time;
-  subject: {
-    name: string;
-    teacher?: string;
-    room?: string;
-  };
+  start: string;
+  end: string;
+  subject: string;
+  teacher?: string;
+  room?: string;
 };

@@ -10,7 +10,6 @@ const TimetableScreen = () => {
   useEffect(() => {
     const fetchTimetable = async () => {
       const course = await asyncStorage.getItem('course');
-      console.log('course set', course, typeof course);
       if (course == null) {
         throw new Error('No course selected');
       }
@@ -29,8 +28,8 @@ const TimetableScreen = () => {
   };
   const dayNumber = getDay();
 
-  return timetable ? (
-    <TimetableTemplate periods={timetable?.days[dayNumber].periods} />
+  return timetable && dayNumber !== 5 && dayNumber !== 6 ? (
+    <TimetableTemplate periods={timetable?.days[4].periods} />
   ) : null;
 };
 

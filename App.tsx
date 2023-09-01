@@ -5,9 +5,8 @@ import TimetableScreen from './src/screens/timetableScreen';
 
 const App: React.FC = () => {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <TimetableScreen />
-      <Text>Test</Text>
     </View>
   );
 };
