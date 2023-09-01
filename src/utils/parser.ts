@@ -1,11 +1,16 @@
 import {parse} from 'himalaya';
-import {WM_URL} from './constants';
-import {transpose} from '../utils/helpers';
-import {Timetable} from '../interfaces/parser.interfaces';
+import {WM_URL} from '../constants';
+import {transpose} from './helpers';
+import TimetableProps from '../types/timetable.types';
 
-const parseTimetable = async (course: number): Promise<Timetable> => {
-  return await fetch(`${WM_URL}${course.toString()}.html`)
-    .then(res => res.text())
+const parseTimetable = async (course: number): Promise<TimetableProps> => {
+  return await fetch(`${WM_URL}${course}.html`)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      return res.text();
+    })
     .then(html => {
       const parsed = parse(html.replace(/(\r\n|\n|\r)/gm, ''));
       const table =
@@ -24,7 +29,6 @@ const parseTimetable = async (course: number): Promise<Timetable> => {
                   ),
             ),
         );
-      // console.log(transpose(table));
 
       const hours = table
         .slice(1)
@@ -35,7 +39,7 @@ const parseTimetable = async (course: number): Promise<Timetable> => {
         .map((day: any) => {
           return {
             day: day[0],
-            lessons: day.slice(1).map((subject: any, i: number) => {
+            periods: day.slice(1).map((subject: any, i: number) => {
               subject && Array.isArray(subject)
                 ? (subject = {
                     name: subject[0],
@@ -53,14 +57,14 @@ const parseTimetable = async (course: number): Promise<Timetable> => {
           };
         });
 
-      const timetable: Timetable = {
+      const timetable = {
         course:
           parsed[0].children[1].children[0].children[0].children[0].children[1]
             .children[0].content,
         days: days,
       };
 
-      return timetable;
+      return timetable as TimetableProps;
     })
     .catch(err => err);
 };

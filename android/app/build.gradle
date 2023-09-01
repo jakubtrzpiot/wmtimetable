@@ -69,11 +69,8 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-//    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdkVersion
     ndkVersion rootProject.ext.ndkVersion
-    buildFeatures.buildConfig true
-
     namespace "com.wmtimetable"
     defaultConfig {
         applicationId "com.wmtimetable"
@@ -101,6 +98,9 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 
