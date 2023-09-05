@@ -1,13 +1,13 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
-import {TimetableTemplateProps} from '../../types/timetable.types';
+import {Day} from '../../types/timetable.types';
 import Tile from './tile';
 
-export const TimetableTemplate = ({periods}: TimetableTemplateProps) => {
+export const TimetableTemplate = ({lessons}: Day) => {
   return (
     <ScrollView>
-      {periods?.map((period: any, idx: any) => (
-        <Tile key={idx} {...period} />
+      {lessons?.map((lesson: any, idx: any) => (
+        <Tile key={idx} {...lesson} />
       ))}
     </ScrollView>
   );

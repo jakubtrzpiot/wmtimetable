@@ -1,7 +1,7 @@
-import {parse} from 'himalaya';
+import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from '../constants';
 import {transpose} from './helpers';
-import {TimetableProps, Period} from '../types/timetable.types';
+import {TimetableProps} from '../types/timetable.types';
 
 const parseTimetable = async (course: number): Promise<TimetableProps> => {
   return await fetch(`${WM_URL}${course}.html`)
@@ -12,63 +12,55 @@ const parseTimetable = async (course: number): Promise<TimetableProps> => {
       return res.text();
     })
     .then(html => {
-      const parsed = parse(html.replace(/(\r\n|\n|\r)/gm, ''));
-      const table =
-        parsed[0].children[1].children[1].children[0].children[0].children[0].children[0].children.map(
-          (row: any) =>
-            row.children.map((cell: any) =>
-              cell.children[0].type === 'text'
-                ? cell.children[0].content === '&nbsp;'
-                  ? null
-                  : cell.children[0].content
-                : cell.children[0].type === 'element' &&
-                  cell.children[0].children.length === 1
-                ? cell.children[0].children[0].content
-                : cell.children[0].children.map((child: any) =>
-                    child.type === 'element' ? child.children[0].content : null,
-                  ),
-            ),
-        );
+      const doc = new parser().parseFromString(
+        html.replace(/(\r\n|\n|\r)/gm, ''),
+        'text/html',
+      );
 
-      const hours = table
-        .slice(1)
-        .map((row: any) => row[1].replace(/(\s)/gm, '').split('-'));
+      const transposed = transpose(
+        Array.from(
+          doc.getElementsByAttribute('class', 'tabela')[0].childNodes,
+          (row: any) => Array.from(row.childNodes),
+        ).slice(1),
+      ).slice(1);
 
-      const days = transpose(table)
-        .slice(2)
-        .map((day: any) => {
-          let [subject, teacher, room] = [null, null, null];
-          console.log(day[0]);
+      const hours = transposed[0].map((hour: any) => {
+        hour = hour.firstChild.data.replace(/(\s)/gm, '').split('-');
+        return {start: hour[0], end: hour[1]};
+      });
+
+      const timetable = transposed.slice(1).map((day: any) => {
+        return day.map((lesson: any, i: number) => {
+          const time = hours[i];
+          const subject =
+            lesson.childNodes.length <= 1
+              ? null
+              : Array.from(lesson.childNodes, (child: any) => {
+                  if (!child.attributes && child.data.trim()) {
+                    return child.data;
+                  } else if (child.attributes) {
+                    // switch (child.attributes[0].value) {
+                    //   case 'p':
+                    //     subject.name = child.firstChild.data;
+                    //     break;
+                    //   case 'n':
+                    //     subject.teacher = child.firstChild.data;
+                    //     break;
+                    //   case 's':
+                    //     subject.room = child.firstChild.data;
+                    //     break;
+                    // }
+                  }
+                });
           return {
-            day: day[0],
-            periods: day.slice(1).map((period: Array<any>, i: number) => {
-              console.log(period);
-              period && Array.isArray(period)
-                ? ((subject = period[0]),
-                  (teacher = period[2]),
-                  (room = period[4]))
-                : period
-                ? (subject = period)
-                : null;
-              return {
-                start: hours[i][0],
-                end: hours[i][1],
-                subject: subject,
-                teacher: teacher,
-                room: room,
-              };
-            }),
+            time,
+            subject,
           };
         });
+      });
+      console.log('timeatable', timetable);
 
-      const timetable = {
-        course:
-          parsed[0].children[1].children[0].children[0].children[0].children[1]
-            .children[0].content,
-        days: days,
-      };
-
-      return timetable as TimetableProps;
+      return {} as TimetableProps;
     })
     .catch(err => err);
 };

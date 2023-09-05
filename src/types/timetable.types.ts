@@ -3,19 +3,21 @@ export type TimetableProps = {
   days: Day[];
 };
 
-export type TimetableTemplateProps = {
-  periods: Period[];
-};
-
 export type Day = {
-  day: string;
-  periods: Period[];
+  lessons: Lesson[];
 };
 
-export type Period = {
-  start: string;
-  end: string;
-  subject: string;
-  teacher?: string;
-  room?: string;
+export type Lesson = {
+  time: {
+    start: string;
+    end: string;
+  };
+  subject: {
+    name: string;
+    teacher: string;
+    room: string;
+    type: string;
+    group: string;
+    week: string;
+  };
 };

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+// import parseTimetable from '../utils/parser.himalay';
 import parseTimetable from '../utils/parser';
 import asyncStorage from '../utils/asyncStorage';
 import TimetableTemplate from '../components/timetable';
@@ -9,6 +10,7 @@ const TimetableScreen = () => {
 
   useEffect(() => {
     const fetchTimetable = async () => {
+      await asyncStorage.setItem('course', '3');
       const course = await asyncStorage.getItem('course');
       if (course == null) {
         throw new Error('No course selected');
@@ -28,9 +30,11 @@ const TimetableScreen = () => {
   };
   const dayNumber = getDay();
 
-  return timetable && dayNumber !== 5 && dayNumber !== 6 ? (
-    <TimetableTemplate periods={timetable?.days[4].periods} />
-  ) : null;
+  // console.log('timetableScreen:', timetable)
+  return <></>;
+  // return timetable && dayNumber !== 5 && dayNumber !== 6 ? (
+  //   <TimetableTemplate lessons={timetable?.days[dayNumber].lessons} />
+  // ) : null;
 };
 
 export default TimetableScreen;
