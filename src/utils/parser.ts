@@ -1,10 +1,10 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from '../constants';
-import {transpose} from './helpers';
+import {transpose, unwrap} from './helpers';
 import {TimetableProps} from '../types/timetable.types';
 
 const parseTimetable = async (course: number): Promise<TimetableProps> => {
-  return await fetch(`${WM_URL}${course}.html`)
+  return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
         throw new Error('Network response was not ok.');
@@ -29,36 +29,17 @@ const parseTimetable = async (course: number): Promise<TimetableProps> => {
         return {start: hour[0], end: hour[1]};
       });
 
+      console.log('transposed', transposed.slice(1));
       const timetable = transposed.slice(1).map((day: any) => {
         return day.map((lesson: any, i: number) => {
           const time = hours[i];
-          const subject =
-            lesson.childNodes.length <= 1
-              ? null
-              : Array.from(lesson.childNodes, (child: any) => {
-                  if (!child.attributes && child.data.trim()) {
-                    return child.data;
-                  } else if (child.attributes) {
-                    // switch (child.attributes[0].value) {
-                    //   case 'p':
-                    //     subject.name = child.firstChild.data;
-                    //     break;
-                    //   case 'n':
-                    //     subject.teacher = child.firstChild.data;
-                    //     break;
-                    //   case 's':
-                    //     subject.room = child.firstChild.data;
-                    //     break;
-                    // }
-                  }
-                });
           return {
             time,
-            subject,
+            subjects: unwrap(lesson),
           };
         });
       });
-      console.log('timeatable', timetable);
+      console.log('timetable', timetable);
 
       return {} as TimetableProps;
     })
