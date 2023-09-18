@@ -1,8 +1,10 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {Lesson} from '../../types/timetable.types';
+import {Lesson, Subject} from '../types/timetable.types';
 
-const Tile = ({start, end, subject, teacher, room}: Lesson) => {
+const LessonTile = ({time, subject}: Lesson) => {
+  const {start, end} = time;
+  const {name, type, group, week, teacher, room} = subject;
   return (
     <View>
       <View>
@@ -11,7 +13,7 @@ const Tile = ({start, end, subject, teacher, room}: Lesson) => {
       </View>
       <View>
         {subject ? (
-          <Text className="text-white dark:text-black">{subject}</Text>
+          <Text className="text-white dark:text-black">{name}</Text>
         ) : null}
         {subject ? (
           <Text className="text-white dark:text-black">{teacher}</Text>
@@ -24,4 +26,4 @@ const Tile = ({start, end, subject, teacher, room}: Lesson) => {
   );
 };
 
-export default Tile;
+export default LessonTile;

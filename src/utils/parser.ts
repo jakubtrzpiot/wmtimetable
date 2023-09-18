@@ -1,9 +1,13 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from '../constants';
 import {transpose, unwrap} from './helpers';
-import {TimetableProps} from '../types/timetable.types';
+import {Timetable, Subject} from '../types/timetable.types';
+import asyncStorage from './asyncStorage';
 
-const parseTimetable = async (course: number): Promise<TimetableProps> => {
+const parseTimetable = async (course: number): Promise<Timetable> => {
+  const groups = await asyncStorage.getItem('groups');
+  const week = await asyncStorage.getItem('week');
+
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
@@ -29,21 +33,24 @@ const parseTimetable = async (course: number): Promise<TimetableProps> => {
         return {start: hour[0], end: hour[1]};
       });
 
-      console.log('transposed', transposed.slice(1));
       const timetable = transposed.slice(1).map((day: any) => {
         return day.map((lesson: any, i: number) => {
           const time = hours[i];
           return {
             time,
-            subjects: unwrap(lesson),
+            subject:
+              unwrap(lesson)?.filter(
+                (subject: Subject) =>
+                  groups.includes(subject.group) && subject.week === week,
+              )[0] || null,
           };
         });
       });
-      console.log('timetable', timetable);
 
-      return {} as TimetableProps;
+      console.log(timetable);
+      return timetable as Timetable;
     })
-    .catch(err => err);
+    .catch(err => err && console.error(err.message));
 };
 
 export default parseTimetable;

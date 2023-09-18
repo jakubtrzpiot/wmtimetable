@@ -56,7 +56,11 @@ export const unwrap = (node: any) => {
 
         const type = t[0];
         const group =
-          t.length > 1 ? t : type === 'j' ? teacher.toLowerCase() : 'all';
+          t.length > 1
+            ? t
+            : type === 'j'
+            ? subject.nextSibling.nextSibling.firstChild.nodeValue.slice(1)
+            : 'all';
 
         const room = node
           .getElementsByAttribute('class', 's')

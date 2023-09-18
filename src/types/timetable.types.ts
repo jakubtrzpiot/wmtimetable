@@ -1,5 +1,4 @@
-export type TimetableProps = {
-  course: string;
+export type Timetable = {
   days: Day[];
 };
 
@@ -12,14 +11,14 @@ export type Lesson = {
     start: string;
     end: string;
   };
-  subjects: Subject[] | null;
+  subject: Subject;
 };
 
 export type Subject = {
-  name: string;
-  type: string;
-  group: string;
-  week: string;
-  teacher: string;
-  room: string;
+  name: string | null;
+  type: string | null;
+  group: string | null;
+  week: string | null;
+  teacher: string | null;
+  room: string | null;
 };
