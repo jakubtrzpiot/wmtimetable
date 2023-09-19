@@ -1,24 +1,19 @@
-export type Timetable = {
-  days: Day[];
-};
-
-export type Day = {
-  lessons: Lesson[];
-};
+export type Timetable = Day[];
+export type Day = Lesson[];
 
 export type Lesson = {
   time: {
     start: string;
     end: string;
   };
-  subject: Subject;
+  subject: Subject[] | null;
 };
 
 export type Subject = {
-  name: string | null;
-  type: string | null;
-  group: string | null;
-  week: string | null;
-  teacher: string | null;
-  room: string | null;
+  name: string;
+  type: string;
+  group: string;
+  week: string;
+  teacher: string;
+  room: string;
 };

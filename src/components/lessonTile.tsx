@@ -1,9 +1,17 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {Lesson, Subject} from '../types/timetable.types';
+import {Lesson} from '../types/timetable.types';
 
 const LessonTile = ({time, subject}: Lesson) => {
   const {start, end} = time;
+  if (!subject)
+    return (
+      <View>
+        <Text className="text-black dark:text-white">{start}</Text>
+        <Text className="text-black dark:text-white">{end}</Text>
+      </View>
+    );
+
   const {name, type, group, week, teacher, room} = subject;
   return (
     <View>

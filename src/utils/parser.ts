@@ -1,14 +1,10 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from '../constants';
 import {transpose, unwrap} from './helpers';
-import {Timetable, Subject} from '../types/timetable.types';
-import asyncStorage from './asyncStorage';
+import {Timetable} from '../types/timetable.types';
 
 const parseTimetable = async (course: number): Promise<Timetable> => {
-  const groups = await asyncStorage.getItem('groups');
-  const week = await asyncStorage.getItem('week');
-
-  return await fetch(`${WM_URL}o${course}.html`)
+  return await fetch(`${WM_URL}o${course.toString()}.html`)
     .then(res => {
       if (!res.ok) {
         throw new Error('Network response was not ok.');
@@ -38,16 +34,11 @@ const parseTimetable = async (course: number): Promise<Timetable> => {
           const time = hours[i];
           return {
             time,
-            subject:
-              unwrap(lesson)?.filter(
-                (subject: Subject) =>
-                  groups.includes(subject.group) && subject.week === week,
-              )[0] || null,
+            subject: unwrap(lesson) || null,
           };
         });
       });
 
-      console.log(timetable);
       return timetable as Timetable;
     })
     .catch(err => err && console.error(err.message));
