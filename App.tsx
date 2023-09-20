@@ -10,7 +10,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <View style={{flex: 1}}>
+    <View className="flex-1 bg-black px-4">
       <TimetableScreen />
     </View>
   );

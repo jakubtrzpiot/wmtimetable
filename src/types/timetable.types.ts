@@ -2,11 +2,13 @@ export type Timetable = Day[];
 export type Day = Lesson[];
 
 export type Lesson = {
-  time: {
-    start: string;
-    end: string;
-  };
-  subject: Subject[] | null;
+  time: Time;
+  subject: Subject | Subject[];
+};
+
+export type Time = {
+  start: string;
+  end: string;
 };
 
 export type Subject = {
