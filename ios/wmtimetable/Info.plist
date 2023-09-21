@@ -52,6 +52,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UIAppFonts</key>
-	<array/>
+	<array>
+		<string>Kanit-Medium.ttf</string>
+	</array>
 </dict>
 </plist>

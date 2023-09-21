@@ -37,8 +37,33 @@ export const setInitialValues = async (
       : group,
   );
   try {
+    const storedCourse = await asyncStorage.getItem('course');
+
+    storedCourse !== course.toString()
+      ? await asyncStorage.removeItem('timetable')
+      : null;
+
     await asyncStorage.setItem('course', course.toString()); // 22
     await asyncStorage.setItem('groups', groups); // ['l06', 'k05', 'p05', 'dg3', 'all']
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const setTimetable = async () => {
+  try {
+    const course = await asyncStorage.getItem('course');
+    //set fetch timestamp maybe
+    if (course === null) {
+      throw new Error('No course selected');
+    }
+
+    //set item in async storage only if it's not the same as the one already there
+    const storedTimetable = await asyncStorage.getItem('timetable');
+    !storedTimetable
+      ? (await asyncStorage.setItem('timetable', await parseTimetable(course)),
+        console.log('timetable set'))
+      : null;
   } catch (err) {
     console.error(err);
   }
@@ -61,26 +86,6 @@ export const getTimetableByDay = async (day: number, week: string) => {
       : null;
 
     return result;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const setTimetable = async () => {
-  try {
-    const course = await asyncStorage.getItem('course');
-    //set fetch timestamp maybe
-
-    if (course === null) {
-      throw new Error('No course selected');
-    }
-
-    const timetable = await parseTimetable(course);
-    //set item in async storage only if it's not the same as the one already there
-    !(await asyncStorage.getItem('timetable'))
-      ? (await asyncStorage.setItem('timetable', timetable),
-        console.log('Timetable set'))
-      : null;
   } catch (err) {
     console.error(err);
   }

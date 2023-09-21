@@ -12,7 +12,7 @@ export const TextComponent = (
 ) => {
   return (
     <Text
-      className={`font-josefin font-bold text-slate-200 ${className}`}
+      className={`font-kanit font-medium text-slate-300 ${className}`}
       {...props}>
       {children}
     </Text>

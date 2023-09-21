@@ -1,5 +1,5 @@
 import {DOMParser as parser} from 'react-native-html-parser';
-import {WM_URL} from '../constants';
+import {WM_URL} from './constants';
 import {Timetable, Subject} from '../types/timetable.types';
 
 const transpose = (array: Array<any>) => {
@@ -116,7 +116,8 @@ const unwrap = (node: any) => {
 };
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
-  return await fetch(`${WM_URL}o${course.toString()}.html`)
+  console.log('course:', course);
+  return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
         throw new Error('Network response was not ok.');

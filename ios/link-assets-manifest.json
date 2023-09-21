@@ -1,4 +1,9 @@
 {
   "migIndex": 1,
-  "data": []
+  "data": [
+    {
+      "path": "src/assets/fonts/Kanit-Medium.ttf",
+      "sha1": "61ac6e618ea64ca7f4ae2444194e0bad4c72c8f9"
+    }
+  ]
 }

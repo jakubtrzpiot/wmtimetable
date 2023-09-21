@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        josefin: ['JosefinSans-Regular', 'sans-serif'],
+        kanit: ['Kanit-Medium'],
       },
     },
   },

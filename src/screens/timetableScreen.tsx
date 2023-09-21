@@ -43,7 +43,7 @@ const TimetableScreen = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <HeaderBar day={day} week={week} />
+      <HeaderBar day={day} week={week} date={date} />
       <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
         <FlatList
           className="min-h-full"
