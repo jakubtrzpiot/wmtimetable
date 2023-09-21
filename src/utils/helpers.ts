@@ -15,14 +15,16 @@ export const addDays = (date: Date, days: number): Date => {
   return result;
 };
 
-//check if week is even or odd and return 'p' or 'n'
+//check if week is even or odd and return 'p' or 'n' starting from monday
 export const getWeekType = (date: Date): string => {
-  const onejan = new Date(date.getFullYear(), 0, 1);
   const weekNumber = Math.ceil(
-    ((date.getTime() - onejan.getTime()) / 86400000 + onejan.getDay()) / 7,
+    (date.getTime() -
+      24 * 60 * 60 * 1000 -
+      new Date(date.getFullYear(), 0, 1).getTime()) /
+      (7 * 24 * 60 * 60 * 1000),
   );
 
-  return weekNumber % 2 === 0 ? 'p' : 'n';
+  return weekNumber % 2 ? 'n' : 'p';
 };
 
 export const setInitialValues = async (
@@ -47,13 +49,16 @@ export const getTimetableByDay = async (day: number, week: string) => {
     const timetable = await asyncStorage.getItem('timetable');
     const groups = await asyncStorage.getItem('groups');
 
-    const result = timetable[day]?.map(({time, subject}: Lesson) => ({
-      time,
-      subject:
-        (subject as Subject[])?.filter(
-          subject => groups.includes(subject.group) && subject.week === week,
-        )[0] || null,
-    }));
+    const result = timetable[day]
+      ? timetable[day]?.map(({time, subject}: Lesson) => ({
+          time,
+          subject:
+            (subject as Subject[])?.filter(
+              subject =>
+                groups.includes(subject.group) && subject.week === week,
+            )[0] || null,
+        }))
+      : null;
 
     return result;
   } catch (err) {
@@ -71,7 +76,11 @@ export const setTimetable = async () => {
     }
 
     const timetable = await parseTimetable(course);
-    await asyncStorage.setItem('timetable', timetable);
+    //set item in async storage only if it's not the same as the one already there
+    !(await asyncStorage.getItem('timetable'))
+      ? (await asyncStorage.setItem('timetable', timetable),
+        console.log('Timetable set'))
+      : null;
   } catch (err) {
     console.error(err);
   }

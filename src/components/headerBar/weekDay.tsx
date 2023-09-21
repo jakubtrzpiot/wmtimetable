@@ -5,13 +5,13 @@ type DayNumber = {dayNumber: number};
 
 const WeekDay = ({dayNumber}: DayNumber) => {
   const day = [
-    'Poniedziałek',
-    'Wtorek',
-    'Środa',
-    'Czwartek',
-    'Piątek',
-    'Sobota',
-    'Niedziela',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
   ][dayNumber];
 
   return (

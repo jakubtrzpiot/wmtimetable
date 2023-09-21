@@ -1172,6 +1172,13 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@egjs/hammerjs@^2.0.17":
+  version "2.0.17"
+  resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
+  integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
+  dependencies:
+    "@types/hammerjs" "^2.0.36"
+
 "@electron/get@^2.0.0":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-2.0.2.tgz#ae2a967b22075e9c25aaf00d5941cd79c21efd7e"
@@ -1905,6 +1912,11 @@
   integrity sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==
   dependencies:
     "@types/node" "*"
+
+"@types/hammerjs@^2.0.36":
+  version "2.0.42"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.42.tgz#d7a53edbc51b2c13a9a759c45d7b5e61243d7dba"
+  integrity sha512-Xxk14BrwHnGi0xlURPRb+Y0UNn2w3cTkeFm7pKMsYOaNgH/kabbJLhcBoNIodwsbTz7Z8KcWjtDvlGH0nc0U9w==
 
 "@types/http-cache-semantics@*":
   version "4.0.1"
@@ -4151,6 +4163,13 @@ himalaya@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/himalaya/-/himalaya-1.1.0.tgz#31724ae9d35714cd7c6f4be94888953f3604606a"
   integrity sha512-LLase1dHCRMel68/HZTFft0N0wti0epHr3nNY7ynpLbyZpmrKMQ8YIpiOV77TM97cNpC8Wb2n6f66IRggwdWPw==
+
+hoist-non-react-statics@^3.3.0:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
+  integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
+  dependencies:
+    react-is "^16.7.0"
 
 html-escaper@^2.0.0:
   version "2.0.2"
@@ -6616,7 +6635,7 @@ prompts@^2.0.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -6705,7 +6724,7 @@ react-devtools@^4.28.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-is@^16.13.1:
+react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -6727,6 +6746,17 @@ react-native-asset@^2.1.1:
     sha1-file "^1.0.4"
     xcode "^2.0.0"
 
+react-native-gesture-handler@^2.13.1:
+  version "2.13.1"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.13.1.tgz#bad89caacd62c4560b9953b02f85f37ee42d5d4c"
+  integrity sha512-hW454X7sjuiBN+lobqw63pmT3boAmTl5OP6zQLq83iEe4T6PcHZ9lxzgCrebtgmutY8cJfq9rM2dOUVh9WBcww==
+  dependencies:
+    "@egjs/hammerjs" "^2.0.17"
+    hoist-non-react-statics "^3.3.0"
+    invariant "^2.2.4"
+    lodash "^4.17.21"
+    prop-types "^15.7.2"
+
 react-native-global-font@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-native-global-font/-/react-native-global-font-1.0.3.tgz#14150a9fff5be9dda0f463b7f12e4a8bc7899885"
@@ -6738,11 +6768,6 @@ react-native-html-parser@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/react-native-html-parser/-/react-native-html-parser-0.1.0.tgz#c35de1dc325562da26e68befa423bac34505ba48"
   integrity sha512-G5d0pk7TA9YgjVJhLRf2zMOOf1HXd8ItM9JYsTS2pXoEfSRfMfRU5iTj03LGwvHU2NT9kc18NDJeLgZY6+Bbvg==
-
-react-native-swipe-gestures@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
-  integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
 
 react-native@0.72.4:
   version "0.72.4"

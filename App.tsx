@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {setInitialValues, setTimetable} from './src/utils/helpers';
 import TimetableScreen from './src/screens/timetableScreen';
 
@@ -10,9 +10,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <View className="flex-1 bg-black px-4">
+    <GestureHandlerRootView className="flex-1 bg-black">
       <TimetableScreen />
-    </View>
+    </GestureHandlerRootView>
   );
 };
 

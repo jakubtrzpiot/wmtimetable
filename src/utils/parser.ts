@@ -70,30 +70,31 @@ const unwrap = (node: any) => {
           .getElementsByAttribute('class', 's')
           [index].firstChild.nodeValue.split('-')
           .slice(0, -1)
-          .join('-');
-        room === 'e-learning' ? (room = 'online') : null;
+          .join('-')
+          .split('/')[0];
+        room === 'e-learning' ? (room = 'ONLINE') : null;
 
         switch (type) {
           case 'j':
-            type = 'lektorat';
+            type = 'english';
             break;
           case 'w':
-            type = 'wykład';
+            type = 'lecture';
             break;
           case 'ć':
-            type = 'ćwiczenia';
+            type = 'practical';
             break;
           case 'l':
-            type = 'laboratorium';
+            type = 'lab';
             break;
           case 's':
-            type = 'seminarium';
+            type = 'seminar';
             break;
           case 'p':
-            type = 'projekt';
+            type = 'project';
             break;
           case 'k':
-            type = 'pracownia komputerowa';
+            type = 'computer lab';
             break;
           default:
         }

@@ -5,7 +5,7 @@ type WeekType = {weekType: string};
 
 const WeekType = ({weekType}: WeekType) => (
   <TextComponent className="">
-    Tydzień {weekType === 'p' ? 'parzysty' : 'nieparzysty'}
+    {(weekType === 'p' ? 'even' : 'odd').toUpperCase()}
   </TextComponent>
 );
 

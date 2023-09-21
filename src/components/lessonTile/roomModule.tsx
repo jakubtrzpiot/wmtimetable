@@ -6,9 +6,13 @@ type Room = {room: string};
 
 const RoomModule = ({room}: Room) => {
   return (
-    <View className="justify-center">
+    <View className="justify-center w-[10]">
       {[...room].map((letter, index) => (
-        <TextComponent key={index} className="text-lg leading-5 text-center">
+        <TextComponent
+          key={index}
+          className={`${
+            room === 'ONLINE' ? 'text-xs leading-3' : 'text-lg leading-5'
+          } text-center`}>
           {letter}
         </TextComponent>
       ))}

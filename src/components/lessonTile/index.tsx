@@ -8,7 +8,7 @@ import RoomModule from './roomModule';
 const LessonTile = ({time, subject}: Lesson) => {
   subject = subject as Subject;
   return (
-    <View className="flex-row mt-4">
+    <View className="flex-row mt-4 h-[70] px-4">
       <TimeModule {...time} />
       <SubjectModule {...subject} />
       <RoomModule room={subject.room} />
