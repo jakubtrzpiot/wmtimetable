@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
+import {TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput';
 
-const color: string = '#daecff' || '#efefef';
+const color: string = '#daecff' || '#daecff';
 
 type TextComponentProps = {
   className?: string;
@@ -21,6 +22,19 @@ export const TextComponent = (
       {...props}>
       {children}
     </Text>
+  );
+};
+
+export const TextInputComponent = (props: TextInputProps) => {
+  const {className} = props;
+  return (
+    <TextInput
+      className={`font-lexend-semibold w-1/2 py-2 px-4 border-2 border-slate-100 rounded-2xl mt-1 mb-4 ${className}`}
+      style={
+        !className || className?.search('!text') === -1 ? {color: color} : null
+      }
+      {...props}
+    />
   );
 };
 
@@ -49,7 +63,7 @@ import type {PanGestureHandlerGestureEvent as Event} from 'react-native-gesture-
 type Dir = 'left' | 'right' | 'up' | 'down';
 
 type SwipeComponentProps = {
-  onSwipe: (dir: Dir) => void;
+  onSwipe?: (dir: Dir) => void;
   onPull?: () => void;
   onPush?: () => void;
   onSwipeLeft?: () => void;
@@ -90,7 +104,7 @@ export const SwipeComponent = ({
   const onHandlerStateChange = ({nativeEvent}: Event) => {
     nativeEvent.state === State.END
       ? dir
-        ? (onSwipe(dir), setDidFire(false))
+        ? (onSwipe && onSwipe(dir), setDidFire(false))
         : null
       : null;
   };

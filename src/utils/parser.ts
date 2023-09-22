@@ -155,7 +155,7 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
       // console.log('timetable:', timetable);
       return timetable as Timetable;
     })
-    .catch(err => err && console.error(err.message));
+    .catch(err => err && console.error(err, 'parseTimetable'));
 };
 
 //TODO export const parseCourses = async (): Promise<number[]> => {

@@ -6,7 +6,7 @@ import dateSlider from './dateSlider';
 type HeaderBarProps = {week: string; date: Date};
 
 const HeaderBar = ({week, date}: HeaderBarProps) => (
-  <View className="pb-2">
+  <View className="mt-4 h-14">
     <TopBar week={week} date={date} />
   </View>
 );

@@ -28,25 +28,43 @@ export const getWeekType = (date: Date): string => {
 };
 
 export const setInitialValues = async (
-  course: number,
-  groups: Array<string>,
+  course?: number,
+  groups?: Array<string>,
 ) => {
-  groups.map((group: string) =>
-    group !== 'all' && !/\d/.test(group)
-      ? groups.push([...group].reverse().join(''))
-      : group,
-  );
+  groups &&
+    groups.map((group: string) =>
+      group !== 'all' && !/\d/.test(group)
+        ? groups.push([...group].reverse().join(''))
+        : group,
+    );
   try {
     const storedCourse = await asyncStorage.getItem('course');
 
-    storedCourse !== course.toString()
+    course && storedCourse !== course.toString()
       ? await asyncStorage.removeItem('timetable')
       : null;
 
-    await asyncStorage.setItem('course', course.toString()); // 22
-    await asyncStorage.setItem('groups', groups); // ['l06', 'k05', 'p05', 'dg3', 'all']
+    course
+      ? await asyncStorage.setItem('course', course.toString()) // 22
+      : await asyncStorage.removeItem('course');
+
+    groups
+      ? await asyncStorage.setItem('groups', groups) // ['l06', 'k05', 'p05', 'dg3', 'all']
+      : await asyncStorage.removeItem('groups');
+    console.log(course, groups);
   } catch (err) {
-    console.error(err);
+    console.error(err, 'in setInitialValues');
+  }
+};
+
+export const isInitialValuesSet = async () => {
+  try {
+    const course = await asyncStorage.getItem('course');
+    const groups = await asyncStorage.getItem('groups');
+    return course !== null && groups !== null;
+  } catch (err) {
+    console.error(err, 'in isInitialValuesSet');
+    return false;
   }
 };
 
@@ -60,12 +78,13 @@ export const fetchTimetable = async (refresh: boolean = false) => {
 
     //set item in async storage only if it's not the same as the one already there
     const storedTimetable = await asyncStorage.getItem('timetable');
+    const timetable = await parseTimetable(course);
     !storedTimetable || refresh
-      ? (await asyncStorage.setItem('timetable', await parseTimetable(course)),
+      ? (await asyncStorage.setItem('timetable', timetable),
         console.log('timetable set'))
       : null;
   } catch (err) {
-    console.error(err);
+    console.error(err, 'in fetchTimetable');
   }
 };
 
@@ -77,7 +96,7 @@ export const getTimetableByDay = async (day: number, week: string) => {
     const result = timetable[day]
       ? timetable[day]
           ?.map(({time, subject}: Lesson) =>
-            subject
+            subject !== null
               ? {
                   time,
                   subject:
@@ -95,7 +114,7 @@ export const getTimetableByDay = async (day: number, week: string) => {
 
     return result;
   } catch (err) {
-    console.error(err);
+    console.error(err, 'in getTimetableByDay');
   }
 };
 
