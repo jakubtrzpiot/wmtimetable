@@ -1,18 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
-import WeekDay from './weekDay';
-import WeekType from './weekType';
+import TopBar from './topBar';
+import dateSlider from './dateSlider';
 
-type HeaderBarProps = {day: number; week: string; date: Date};
+type HeaderBarProps = {week: string; date: Date};
 
-const HeaderBar: React.FC<HeaderBarProps> = ({
-  day,
-  week,
-  date,
-}: HeaderBarProps) => (
-  <View className="px-4 fixed">
-    <WeekDay day={date} />
-    <WeekType weekType={week} />
+const HeaderBar = ({week, date}: HeaderBarProps) => (
+  <View className="pb-2">
+    <TopBar week={week} date={date} />
   </View>
 );
 

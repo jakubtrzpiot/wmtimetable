@@ -53,7 +53,10 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Kanit-Medium.ttf</string>
+		<string>Lexend-Bold.ttf</string>
+		<string>Lexend-Medium.ttf</string>
+		<string>Lexend-SemiBold.ttf</string>
+		<string>Lexend.ttf</string>
 	</array>
 </dict>
 </plist>

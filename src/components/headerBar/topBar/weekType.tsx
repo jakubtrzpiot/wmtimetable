@@ -1,10 +1,10 @@
 import React from 'react';
-import {TextComponent} from '../../components';
+import {TextComponent} from '../..';
 
 type WeekType = {weekType: string};
 
 const WeekType = ({weekType}: WeekType) => (
-  <TextComponent className="">
+  <TextComponent className="ml-1">
     {(weekType === 'p' ? 'even' : 'odd').toUpperCase()}
   </TextComponent>
 );

@@ -53,7 +53,7 @@ export const setInitialValues = async (
 export const setTimetable = async () => {
   try {
     const course = await asyncStorage.getItem('course');
-    //set fetch timestamp maybe
+    //TODO set fetch timestamp maybe
     if (course === null) {
       throw new Error('No course selected');
     }
@@ -75,14 +75,22 @@ export const getTimetableByDay = async (day: number, week: string) => {
     const groups = await asyncStorage.getItem('groups');
 
     const result = timetable[day]
-      ? timetable[day]?.map(({time, subject}: Lesson) => ({
-          time,
-          subject:
-            (subject as Subject[])?.filter(
-              subject =>
-                groups.includes(subject.group) && subject.week === week,
-            )[0] || null,
-        }))
+      ? timetable[day]
+          ?.map(({time, subject}: Lesson) =>
+            subject
+              ? {
+                  time,
+                  subject:
+                    (subject as Subject[])?.filter(
+                      subject =>
+                        groups.includes(subject.group) && subject.week === week,
+                    )[0] || null,
+                }
+              : null,
+          )
+          .filter(
+            (lesson: Lesson) => lesson !== null && lesson.subject !== null,
+          )
       : null;
 
     return result;
@@ -91,7 +99,7 @@ export const getTimetableByDay = async (day: number, week: string) => {
   }
 };
 
-// export const getCourse = async () => {
+//TODO export const getCourse = async () => {
 //   try {
 //     return await parseCourses();
 //   } catch (err) {

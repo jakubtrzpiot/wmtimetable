@@ -2,8 +2,20 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/Kanit-Medium.ttf",
-      "sha1": "61ac6e618ea64ca7f4ae2444194e0bad4c72c8f9"
+      "path": "src/assets/fonts/Lexend-Bold.ttf",
+      "sha1": "1a8d4599190b5057c425db5709a40c7ef03b1202"
+    },
+    {
+      "path": "src/assets/fonts/Lexend-Medium.ttf",
+      "sha1": "6fc08100245a310cae59f5265d8f40f6df11f0ef"
+    },
+    {
+      "path": "src/assets/fonts/Lexend-SemiBold.ttf",
+      "sha1": "5091b81d0fce06946a1e29ca2e2c8b8642127386"
+    },
+    {
+      "path": "src/assets/fonts/Lexend.ttf",
+      "sha1": "bc33fa22827ac530e6bf64d3b6f412067f200d6f"
     }
   ]
 }

@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
+
+const color: string = '#daecff' || '#efefef';
 
 type TextComponentProps = {
   className?: string;
@@ -12,10 +14,32 @@ export const TextComponent = (
 ) => {
   return (
     <Text
-      className={`font-kanit font-medium text-slate-300 ${className}`}
+      className={`font-lexend-semibold ${className}`}
+      style={
+        !className || className?.search('!text') === -1 ? {color: color} : null
+      }
       {...props}>
       {children}
     </Text>
+  );
+};
+
+type ViewComponentProps = {
+  className?: string;
+  children?: React.ReactNode;
+};
+
+export const ViewComponent = (
+  {className, children}: ViewComponentProps,
+  props: any,
+) => {
+  return (
+    <View
+      style={className?.search('!bg') === -1 ? {backgroundColor: color} : null}
+      className={`${className}`}
+      {...props}>
+      {children}
+    </View>
   );
 };
 

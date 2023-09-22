@@ -8,21 +8,20 @@ import {
   addDays,
   getWeekType,
 } from '../utils/helpers';
-import {TextComponent, SwipeComponent} from '../components';
+import {SwipeComponent} from '../components';
 import HeaderBar from '../components/headerBar';
 import LessonTile from '../components/lessonTile';
+import Empty from '../components/lessonTile/empty';
 
 const TimetableScreen = () => {
   const [timetable, setTimetable] = useState<Day>();
   const [date, setDate] = useState<Date>(new Date());
-  const [day, setDay] = useState<number>(0);
   const [week, setWeek] = useState<string>('');
 
   useEffect(() => {
     const day = getDay(date);
-    const week = getWeekType(date);
 
-    setDay(day);
+    const week = getWeekType(date);
     setWeek(week);
 
     getTimetableByDay(day, week)
@@ -43,24 +42,22 @@ const TimetableScreen = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <HeaderBar day={day} week={week} date={date} />
+      <HeaderBar week={week} date={date} />
       <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
         <FlatList
-          className="min-h-full"
+          className="min-h-full pt-2 px-4"
           data={timetable}
-          renderItem={({item}) =>
-            item.subject ? <LessonTile {...item} /> : null
-          }
-          ListEmptyComponent={<TextComponent>Empty</TextComponent>}
+          renderItem={({item}) => <LessonTile {...item} />}
+          ItemSeparatorComponent={() => <View className="h-4" />}
+          ListEmptyComponent={() => <Empty />}
           ListFooterComponent={() => (
-            <View style={{height: 60}} /> // Add space at the bottom
+            <View className="h-[72]" /> // Add space at the bottom
           )}
         />
       </SwipeComponent>
     </SafeAreaView>
   );
 };
-//get the metarial ui color
-//change the font
+//TODO get the metarial ui colors
 
 export default TimetableScreen;

@@ -4,7 +4,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        kanit: ['Kanit-Medium'],
+        lexend: ['Lexend'],
+        'lexend-medium': ['Lexend-Medium'],
+        'lexend-semibold': ['Lexend-SemiBold'],
+        'lexend-bold': ['Lexend-Bold'],
       },
     },
   },

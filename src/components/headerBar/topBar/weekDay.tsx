@@ -1,6 +1,6 @@
 import React from 'react';
-import {TextComponent} from '../../components';
-import {addDays} from '../../utils/helpers';
+import {TextComponent} from '../..';
+import {addDays} from '../../../utils/helpers';
 
 const WeekDay = ({day}: {day: Date}) => {
   const today = new Date();

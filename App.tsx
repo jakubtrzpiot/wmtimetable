@@ -5,8 +5,9 @@ import TimetableScreen from './src/screens/timetableScreen';
 
 const App: React.FC = () => {
   useEffect(() => {
-    setInitialValues(22, ['l06', 'k05', 'p05', 'dg3', 'all']);
-    setTimetable();
+    setInitialValues(22, ['l06', 'k05', 'p05', 'dg3', 'all']).then(() =>
+      setTimetable(),
+    );
   }, []);
 
   return (
