@@ -50,10 +50,21 @@ type Dir = 'left' | 'right' | 'up' | 'down';
 
 type SwipeComponentProps = {
   onSwipe: (dir: Dir) => void;
+  onPull?: () => void;
+  onPush?: () => void;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
   children: React.ReactNode;
 };
 
-export const SwipeComponent = ({onSwipe, children}: SwipeComponentProps) => {
+export const SwipeComponent = ({
+  onSwipe,
+  onPull,
+  onPush,
+  onSwipeLeft,
+  onSwipeRight,
+  children,
+}: SwipeComponentProps) => {
   const [didFire, setDidFire] = useState<boolean>(false);
   const [dir, setDir] = useState<Dir>();
   const swipeRange: number = 50;
@@ -63,12 +74,16 @@ export const SwipeComponent = ({onSwipe, children}: SwipeComponentProps) => {
 
     if (translationX > swipeRange && !didFire) {
       setDir('right'), setDidFire(true);
+      onSwipeRight ? onSwipeRight() : null;
     } else if (translationX < -swipeRange && !didFire) {
       setDir('left'), setDidFire(true);
+      onSwipeLeft ? onSwipeLeft() : null;
     } else if (translationY > swipeRange && !didFire) {
       setDir('down'), setDidFire(true);
+      onPull ? onPull() : null;
     } else if (translationY < -swipeRange && !didFire) {
       setDir('up'), setDidFire(true);
+      onPush ? onPush() : null;
     }
   };
 

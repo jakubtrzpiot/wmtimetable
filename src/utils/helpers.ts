@@ -50,7 +50,7 @@ export const setInitialValues = async (
   }
 };
 
-export const setTimetable = async () => {
+export const fetchTimetable = async (refresh: boolean = false) => {
   try {
     const course = await asyncStorage.getItem('course');
     //TODO set fetch timestamp maybe
@@ -60,7 +60,7 @@ export const setTimetable = async () => {
 
     //set item in async storage only if it's not the same as the one already there
     const storedTimetable = await asyncStorage.getItem('timetable');
-    !storedTimetable
+    !storedTimetable || refresh
       ? (await asyncStorage.setItem('timetable', await parseTimetable(course)),
         console.log('timetable set'))
       : null;

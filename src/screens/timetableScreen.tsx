@@ -3,6 +3,7 @@ import {SafeAreaView, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {Day} from '../types/timetable.types';
 import {
+  fetchTimetable,
   getTimetableByDay,
   getDay,
   addDays,
@@ -15,6 +16,7 @@ import Empty from '../components/lessonTile/empty';
 
 const TimetableScreen = () => {
   const [timetable, setTimetable] = useState<Day>();
+  const [didRefresh, setDidRefresh] = useState<boolean>(true);
   const [date, setDate] = useState<Date>(new Date());
   const [week, setWeek] = useState<string>('');
 
@@ -24,26 +26,36 @@ const TimetableScreen = () => {
     const week = getWeekType(date);
     setWeek(week);
 
-    getTimetableByDay(day, week)
-      .then((data: Day) => setTimetable(data))
-      .catch(err => console.log(err));
-  }, [date]);
+    didRefresh
+      ? getTimetableByDay(day, week)
+          .then((data: Day) => setTimetable(data))
+          .catch(err => console.log(err))
+      : null;
+    setDidRefresh(false);
+  }, [date, didRefresh]);
 
   const handleSwipe = (dir: string) => {
     switch (dir) {
       case 'left':
         setDate(addDays(date, 1));
+        setDidRefresh(true);
         break;
       case 'right':
         setDate(addDays(date, -1));
+        setDidRefresh(true);
         break;
     }
   };
 
+  const handleRefresh = () =>
+    fetchTimetable(true).then(() => setDidRefresh(true));
+
   return (
     <SafeAreaView className="flex-1">
       <HeaderBar week={week} date={date} />
-      <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
+      <SwipeComponent
+        onPull={() => handleRefresh()}
+        onSwipe={dir => handleSwipe(dir)}>
         <FlatList
           className="min-h-full pt-2 px-4"
           data={timetable}
