@@ -66,6 +66,7 @@ const TimetableScreen = () => {
           <SafeAreaView className="flex-1">
             <FlatList
               className="min-h-full pt-2 px-4"
+              showsVerticalScrollIndicator={true}
               data={timetable}
               renderItem={({item}) => <LessonTile {...item} />}
               ItemSeparatorComponent={() => <View className="h-4" />}

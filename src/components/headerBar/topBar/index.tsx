@@ -6,7 +6,7 @@ import WeekType from './weekType';
 type TopBarProps = {week: string; date: Date};
 
 const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => (
-  <View className="px-4">
+  <View className="px-4 pb-2">
     <WeekDay day={date} />
     <WeekType weekType={week} />
   </View>

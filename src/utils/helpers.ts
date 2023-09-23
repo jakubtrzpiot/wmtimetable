@@ -27,6 +27,22 @@ export const getWeekType = (date: Date): string => {
   return weekNumber % 2 ? 'n' : 'p';
 };
 
+export const range = (start: number, stop?: number, step?: number) => {
+  !stop ? ((stop = start), (start = 0)) : null;
+  !step ? (step = 1) : null;
+
+  if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+    return [];
+  }
+
+  let result = [];
+  for (let i = start; step > 0 ? i < stop : i > stop; i += step) {
+    result.push(i);
+  }
+
+  return result;
+};
+
 export const setInitialValues = async (
   course?: number,
   groups?: Array<string>,

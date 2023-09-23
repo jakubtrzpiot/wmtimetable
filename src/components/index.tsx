@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Text, TextInput, View, ActivityIndicator} from 'react-native';
 import {TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput';
+import {StyleProp} from 'react-native';
 
-const color: string = '#daecff' || '#daecff';
+const color: string = '#daecff';
 
 type TextComponentProps = {
   className?: string;
@@ -47,9 +48,20 @@ export const ViewComponent = (
   {className, children}: ViewComponentProps,
   props: any,
 ) => {
+  let style: {backgroundColor?: string; borderColor?: string} = {};
+  if (className?.search('!bg') === -1) {
+    style.backgroundColor = color;
+  }
+  if (className?.search('set-border') !== -1) {
+    style.borderColor = color;
+  }
+
   return (
     <View
-      style={className?.search('!bg') === -1 ? {backgroundColor: color} : null}
+      style={style}
+      // className?.search('set-border') !== -1
+      //     ? {borderColor: color}
+      //     : null
       className={`${className}`}
       {...props}>
       {children}
