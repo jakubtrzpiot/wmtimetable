@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {Text, TextInput, View, ActivityIndicator} from 'react-native';
 import {TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput';
-import {StyleProp} from 'react-native';
 
-const color: string = '#daecff';
+const color: string = '#daecff' || '#daecff';
 
 type TextComponentProps = {
   className?: string;
@@ -30,7 +29,7 @@ export const TextInputComponent = (props: TextInputProps) => {
   const {className} = props;
   return (
     <TextInput
-      className={`font-lexend-semibold w-1/2 py-2 px-4 border-2 border-slate-100 rounded-2xl mt-1 mb-4 ${className}`}
+      className={`font-lexend-semibold tracking-wide py-2 border-[${color}] border-b-[1.25px] mb-8 ${className}`}
       style={
         !className || className?.search('!text') === -1 ? {color: color} : null
       }

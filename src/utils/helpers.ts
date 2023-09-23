@@ -67,7 +67,7 @@ export const setInitialValues = async (
     groups
       ? await asyncStorage.setItem('groups', groups) // ['l06', 'k05', 'p05', 'dg3', 'all']
       : await asyncStorage.removeItem('groups');
-    console.log(course, groups);
+    // console.log(course, groups);
   } catch (err) {
     console.error(err, 'in setInitialValues');
   }
@@ -97,7 +97,7 @@ export const fetchTimetable = async (refresh: boolean = false) => {
     const timetable = await parseTimetable(course);
     !storedTimetable || refresh
       ? (await asyncStorage.setItem('timetable', timetable),
-        console.log('timetable set', timetable))
+        console.log('timetable set'))
       : null;
   } catch (err) {
     console.error(err, 'in fetchTimetable');
@@ -130,12 +130,12 @@ export const getTimetableByDay = async (day: number, week: string) => {
 
     console.log(
       'today set',
-      '\nday:',
-      day,
-      '\nweek:',
-      week,
-      '\ntoday:',
-      result,
+      //   '\nday:',
+      //   day,
+      //   '\nweek:',
+      //   week,
+      //   '\ntoday:',
+      //   result,
     );
     return result;
   } catch (err) {

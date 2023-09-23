@@ -49,7 +49,7 @@ const SetupScreen = ({watchSubmit}: SetupScreenProps) => {
   //on change plan remove values
 
   return (
-    <View className="flex-1 py-8 px-4 bg-[#121212] items-center">
+    <View className="flex-1 py-8 px-4 bg-[#121212]">
       <TextComponent>Enter your course number:</TextComponent>
       <TextInputComponent
         inputMode="numeric"
@@ -81,7 +81,7 @@ const SetupScreen = ({watchSubmit}: SetupScreenProps) => {
         onChangeText={text => onChangeEnglish(text)}
       />
       <TouchableHighlight
-        className="py-4 px-8 items-center text-[#daecff] rounded-2xl"
+        className="py-4 px-8 items-center rounded-2xl"
         onPress={() => handleSubmit()}>
         <TextComponent>Submit</TextComponent>
       </TouchableHighlight>

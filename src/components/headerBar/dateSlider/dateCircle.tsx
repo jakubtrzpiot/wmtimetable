@@ -11,15 +11,17 @@ const DateCircle = ({date, i}: {date: Date; i: number}) => {
 
   return (
     <View
-      className={`py-2 justify-center items-center ${moreSpace ? 'ml-4' : ''} ${
+      className={`pt-2 pb-1 justify-center items-center ${
+        moreSpace ? 'ml-4' : ''
+      } ${
         today - 1000 * 60 * 60 * 24 > date.getTime() && i ? 'opacity-25' : ''
       }`}>
       <TextComponent className="mb-1">{dayLetter}</TextComponent>
       <ViewComponent
         className={`w-8 h-8 border-[1.25px] set-border rounded-full justify-center items-center ${
-          !i ? '' : '!bg-black'
+          !i ? '' : '!bg-[#121212]'
         }`}>
-        <TextComponent className={`leading-4 ${!i ? '!text-black' : ''} `}>
+        <TextComponent className={`leading-4 ${!i ? '!text-[#121212]' : ''} `}>
           {date.getDate()}
         </TextComponent>
       </ViewComponent>

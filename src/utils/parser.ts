@@ -116,7 +116,7 @@ const unwrap = (node: any) => {
 };
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
-  console.log('course:', course);
+  // console.log('course:', course);
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
