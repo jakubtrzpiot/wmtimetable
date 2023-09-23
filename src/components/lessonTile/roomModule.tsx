@@ -6,7 +6,7 @@ type Room = {room: string};
 
 const RoomModule = ({room}: Room) => {
   return (
-    <View className="justify-center w-[10]">
+    <View className="justify-center w-[12]">
       {[...room].map((letter, index) => (
         <TextComponent
           key={index}

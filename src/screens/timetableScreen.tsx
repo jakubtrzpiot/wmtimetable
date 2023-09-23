@@ -9,7 +9,7 @@ import {
   addDays,
   getWeekType,
 } from '../utils/helpers';
-import {SwipeComponent} from '../components';
+import {SwipeComponent, Loader} from '../components';
 import HeaderBar from '../components/headerBar';
 import LessonTile from '../components/lessonTile';
 import Empty from '../components/lessonTile/empty';
@@ -57,11 +57,12 @@ const TimetableScreen = () => {
     );
   };
 
-  return (
+  return week && date ? (
     <>
       <HeaderBar week={week} date={date} />
-      <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
-        {day === 5 || day === 6 || timetable ? (
+
+      {timetable || day === 5 || day === 6 ? (
+        <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
           <SafeAreaView className="flex-1">
             <FlatList
               className="min-h-full pt-2 px-4"
@@ -80,13 +81,13 @@ const TimetableScreen = () => {
               }
             />
           </SafeAreaView>
-        ) : (
-          <View className="flex-1 bg-black justify-center items-center">
-            <ActivityIndicator size="large" color="#fff" />
-          </View>
-        )}
-      </SwipeComponent>
+        </SwipeComponent>
+      ) : (
+        <Loader />
+      )}
     </>
+  ) : (
+    <Loader />
   );
 };
 //TODO get the metarial ui colors

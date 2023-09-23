@@ -6,7 +6,7 @@ import subjectMap from '../../utils/subjectMap';
 
 const SubjectModule = ({name, teacher, type}: Subject) => {
   return (
-    <ViewComponent className="grow rounded-3xl justify-between px-5 py-3 mr-2.5">
+    <ViewComponent className="grow rounded-3xl justify-between px-5 py-3 mr-2">
       <TextComponent className="w-56 text-base leading-5 !text-black tracking-wider">
         {subjectMap[name] ? subjectMap[name] : name}
       </TextComponent>

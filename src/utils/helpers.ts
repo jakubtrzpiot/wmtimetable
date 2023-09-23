@@ -81,7 +81,7 @@ export const fetchTimetable = async (refresh: boolean = false) => {
     const timetable = await parseTimetable(course);
     !storedTimetable || refresh
       ? (await asyncStorage.setItem('timetable', timetable),
-        console.log('timetable set'))
+        console.log('timetable set', timetable))
       : null;
   } catch (err) {
     console.error(err, 'in fetchTimetable');
@@ -112,6 +112,15 @@ export const getTimetableByDay = async (day: number, week: string) => {
           )
       : null;
 
+    console.log(
+      'today set',
+      '\nday:',
+      day,
+      '\nweek:',
+      week,
+      '\ntoday:',
+      result,
+    );
     return result;
   } catch (err) {
     console.error(err, 'in getTimetableByDay');

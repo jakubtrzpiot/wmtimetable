@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, TextInput, View} from 'react-native';
+import {Text, TextInput, View, ActivityIndicator} from 'react-native';
 import {TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput';
 
 const color: string = '#daecff' || '#daecff';
@@ -117,3 +117,9 @@ export const SwipeComponent = ({
     </PanGestureHandler>
   );
 };
+
+export const Loader = () => (
+  <View className="flex-1 justify-center items-center bg-inherit">
+    <ActivityIndicator size="large" color="#daecff" />
+  </View>
+);

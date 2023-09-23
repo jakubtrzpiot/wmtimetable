@@ -1,9 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, TouchableHighlight, Alert} from 'react-native';
 import {TextComponent, TextInputComponent} from '../components';
 import {setInitialValues, fetchTimetable} from '../utils/helpers';
 
-const SetupScreen = () => {
+type SetupScreenProps = {
+  watchSubmit: () => void;
+};
+
+const SetupScreen = ({watchSubmit}: SetupScreenProps) => {
   const [course, onChangeCourse] = useState<string | null>(null);
   const [lab, onChangeLab] = useState<string | null>(null);
   const [computerLab, onChangeComputerLab] = useState<string | null>(null);
@@ -37,7 +41,7 @@ const SetupScreen = () => {
           'all',
         ]),
         setInitialValues(parseInt(course), groups).then(() =>
-          fetchTimetable(true),
+          fetchTimetable(true).then(() => watchSubmit()),
         ))
       : (console.log('not all values set'), showAlert());
   };
@@ -45,7 +49,7 @@ const SetupScreen = () => {
   //on change plan remove values
 
   return (
-    <View className="flex-1 py-8 px-4 bg-black items-center">
+    <View className="flex-1 py-8 px-4 bg-[#121212] items-center">
       <TextComponent>Enter your course number:</TextComponent>
       <TextInputComponent
         inputMode="numeric"
