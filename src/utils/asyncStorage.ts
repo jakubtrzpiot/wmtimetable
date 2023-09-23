@@ -25,5 +25,13 @@ const removeItem = async (key: string) => {
   }
 };
 
-const asyncStorage = {setItem, getItem, removeItem};
+const clear = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (err) {
+    console.error(err, 'in clear');
+  }
+};
+
+const asyncStorage = {setItem, getItem, removeItem, clear};
 export default asyncStorage;

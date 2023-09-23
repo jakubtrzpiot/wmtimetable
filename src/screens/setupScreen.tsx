@@ -1,18 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, TouchableHighlight, Alert} from 'react-native';
 import {TextComponent, TextInputComponent} from '../components';
-import {setInitialValues, fetchTimetable} from '../utils/helpers';
+import {
+  setInitialValues,
+  fetchTimetable,
+  fetchCourseName,
+} from '../utils/helpers';
+import {RefreshContext} from '../utils/Context';
 
-type SetupScreenProps = {
-  watchSubmit: () => void;
-};
-
-const SetupScreen = ({watchSubmit}: SetupScreenProps) => {
-  const [course, onChangeCourse] = useState<string | null>(null);
+const SetupScreen = () => {
+  const [course, setCourse] = useState<string | null>(null);
   const [lab, onChangeLab] = useState<string | null>(null);
   const [computerLab, onChangeComputerLab] = useState<string | null>(null);
   const [project, onChangeProject] = useState<string | null>(null);
   const [english, onChangeEnglish] = useState<string | null>(null);
+  const useRefresh = useContext(RefreshContext);
+  const [courseName, setCourseName] = useState<string>('No course');
 
   const showAlert = () => {
     Alert.alert(
@@ -41,9 +44,18 @@ const SetupScreen = ({watchSubmit}: SetupScreenProps) => {
           'all',
         ]),
         setInitialValues(parseInt(course), groups).then(() =>
-          fetchTimetable(true).then(() => watchSubmit()),
+          fetchTimetable(true).then(() => useRefresh('submit')),
         ))
       : (console.log('not all values set'), showAlert());
+  };
+
+  const onChangeCourse = (text: string) => {
+    setCourse(text);
+    text
+      ? fetchCourseName(parseInt(text))
+          .then(data => data && setCourseName(data))
+          .catch(err => setCourseName('Not found'))
+      : setCourseName('No course');
   };
 
   //on change plan remove values
@@ -56,6 +68,7 @@ const SetupScreen = ({watchSubmit}: SetupScreenProps) => {
         maxLength={2}
         onChangeText={text => onChangeCourse(text)}
       />
+      <TextComponent className="-mt-6 mb-6">{`Selected course: ${courseName}`}</TextComponent>
       <TextComponent>Lab group number:</TextComponent>
       <TextInputComponent
         inputMode="numeric"

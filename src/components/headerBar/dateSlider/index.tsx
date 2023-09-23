@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {FlatList, View} from 'react-native';
 import {range, addDays} from '../../../utils/helpers';
 import DateCircle from './dateCircle';
@@ -8,13 +8,15 @@ type DateSliderProps = {date: Date};
 
 const dateSlider = ({date}: DateSliderProps) => {
   const flatListRef = useRef<FlatList>(null);
+
   useEffect(() => {
     flatListRef?.current?.scrollToIndex({
-      index: 12,
+      index: 15,
       animated: true,
-      viewPosition: 0,
+      viewPosition: 0.5,
     });
   }, [date]);
+
   return (
     <>
       <FlatList
@@ -24,11 +26,13 @@ const dateSlider = ({date}: DateSliderProps) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         ref={flatListRef}
-        getItemLayout={(data, index) => ({
-          length: 32,
-          offset: 32 * index,
-          index,
-        })}
+        getItemLayout={(data, index) => {
+          return {
+            length: 32,
+            offset: (32 + 4) * index - 4,
+            index,
+          };
+        }}
       />
       <Month date={date} />
     </>

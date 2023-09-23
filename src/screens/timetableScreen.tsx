@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, View, ActivityIndicator} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import {Day} from '../types/timetable.types';
 import {
   fetchTimetable,
+  fetchCourseName,
   getTimetableByDay,
   getDay,
   addDays,
@@ -52,6 +53,7 @@ const TimetableScreen = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+
     fetchTimetable(true).then(
       () => (setIsRefreshing(false), setDidRefresh(true)),
     );

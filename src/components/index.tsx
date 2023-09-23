@@ -1,8 +1,14 @@
-import React, {useState} from 'react';
-import {Text, TextInput, View, ActivityIndicator} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {
+  Text,
+  TextInput,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import {TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput';
-
-const color: string = '#daecff' || '#daecff';
+import {ThemeContext} from '../utils/Context';
 
 type TextComponentProps = {
   className?: string;
@@ -13,6 +19,8 @@ export const TextComponent = (
   {className, children}: TextComponentProps,
   props: any,
 ) => {
+  const color = useContext(ThemeContext);
+
   return (
     <Text
       className={`font-lexend-semibold ${className}`}
@@ -26,13 +34,16 @@ export const TextComponent = (
 };
 
 export const TextInputComponent = (props: TextInputProps) => {
+  const color = useContext(ThemeContext);
+
   const {className} = props;
   return (
     <TextInput
-      className={`font-lexend-semibold tracking-wide py-2 border-[${color}] border-b-[1.25px] mb-8 ${className}`}
-      style={
-        !className || className?.search('!text') === -1 ? {color: color} : null
-      }
+      className={`font-lexend-semibold py-2 border-b-[1.25px] mb-8 ${className}`}
+      style={{
+        color: color,
+        borderColor: color,
+      }}
       {...props}
     />
   );
@@ -47,6 +58,8 @@ export const ViewComponent = (
   {className, children}: ViewComponentProps,
   props: any,
 ) => {
+  const color = useContext(ThemeContext);
+
   let style: {backgroundColor?: string; borderColor?: string} = {};
   if (className?.search('!bg') === -1) {
     style.backgroundColor = color;
@@ -56,15 +69,38 @@ export const ViewComponent = (
   }
 
   return (
-    <View
-      style={style}
-      // className?.search('set-border') !== -1
-      //     ? {borderColor: color}
-      //     : null
-      className={`${className}`}
-      {...props}>
+    <View style={style} className={`${className}`} {...props}>
       {children}
     </View>
+  );
+};
+
+type SettingsIconProps = {
+  onPress?: () => void;
+  onLongPress?: () => void;
+  name: string;
+  size?: number;
+  customColor?: string;
+  className?: string;
+};
+
+export const IconComponent = ({
+  onPress,
+  onLongPress,
+  name,
+  size,
+  customColor,
+  className,
+}: SettingsIconProps) => {
+  const color = useContext(ThemeContext);
+
+  return (
+    <TouchableOpacity
+      className={className}
+      onPress={onPress}
+      onLongPress={onLongPress}>
+      <Icon name={name} size={size} color={customColor ? customColor : color} />
+    </TouchableOpacity>
   );
 };
 
@@ -129,8 +165,11 @@ export const SwipeComponent = ({
   );
 };
 
-export const Loader = () => (
-  <View className="flex-1 justify-center items-center bg-inherit">
-    <ActivityIndicator size="large" color="#daecff" />
-  </View>
-);
+export const Loader = () => {
+  const color = useContext(ThemeContext);
+  return (
+    <View className="flex-1 justify-center items-center bg-inherit">
+      <ActivityIndicator size="large" color={color} />
+    </View>
+  );
+};

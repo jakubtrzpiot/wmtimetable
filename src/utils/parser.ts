@@ -158,30 +158,22 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
     .catch(err => err && console.error(err, 'parseTimetable'));
 };
 
-//TODO export const parseCourses = async (): Promise<number[]> => {
-//   return await fetch(`${WM_URL}index.html`)
-//     .then(res => {
-//       if (!res.ok) {
-//         throw new Error('Network response was not ok.');
-//       }
-//       return res.text();
-//     })
-//     .then(html => {
-//       const doc = new parser().parseFromString(
-//         html.replace(/(\r\n|\n|\r)/gm, ''),
-//         'text/html',
-//       );
+//parse course name
+export const parseCourseName = async (course: number): Promise<string> => {
+  return await fetch(`${WM_URL}o${course}.html`)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      return res.text();
+    })
+    .then(html => {
+      const doc = new parser().parseFromString(
+        html.replace(/(\r\n|\n|\r)/gm, ''),
+        'text/html',
+      );
 
-//       const courses = Array.from(
-//         doc.getElementsByAttribute('class', 'tabela')[0].childNodes,
-//         (row: any) => Array.from(row.childNodes),
-//       )
-//         .slice(1)
-//         .map((row: any) => row[0].firstChild.data.trim());
-
-//       console.log(courses);
-
-//       return courses;
-//     })
-//     .catch(err => err && console.error(err.message));
-// };
+      return doc.getElementsByAttribute('class', 'tytulnapis')[0].firstChild
+        .nodeValue;
+    });
+};

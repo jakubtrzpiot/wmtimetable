@@ -1,6 +1,6 @@
 import {Lesson, Subject} from '../types/timetable.types';
 import asyncStorage from './asyncStorage';
-import {parseTimetable} from './parser';
+import {parseTimetable, parseCourseName} from './parser';
 
 //get day as a number starting from 0 and monday
 export const getDay = (date: Date): number => {
@@ -87,12 +87,10 @@ export const isInitialValuesSet = async () => {
 export const fetchTimetable = async (refresh: boolean = false) => {
   try {
     const course = await asyncStorage.getItem('course');
-    //TODO set fetch timestamp maybe
     if (course === null) {
       throw new Error('No course selected');
     }
 
-    //set item in async storage only if it's not the same as the one already there
     const storedTimetable = await asyncStorage.getItem('timetable');
     const timetable = await parseTimetable(course);
     !storedTimetable || refresh
@@ -128,25 +126,22 @@ export const getTimetableByDay = async (day: number, week: string) => {
           )
       : null;
 
-    console.log(
-      'today set',
-      //   '\nday:',
-      //   day,
-      //   '\nweek:',
-      //   week,
-      //   '\ntoday:',
-      //   result,
-    );
+    // console.log(
+    //   'today set',
+    //   //   '\nday:',
+    //   //   day,
+    //   //   '\nweek:',
+    //   //   week,
+    //   //   '\ntoday:',
+    //   //   result,
+    // );
     return result;
   } catch (err) {
     console.error(err, 'in getTimetableByDay');
   }
 };
 
-//TODO export const getCourse = async () => {
-//   try {
-//     return await parseCourses();
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+export const fetchCourseName = async (course: number) => {
+  const courseName = await parseCourseName(course);
+  return courseName;
+};
