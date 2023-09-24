@@ -47,6 +47,7 @@ export const setInitialValues = async (
   course?: number,
   groups?: Array<string>,
   language?: string,
+  courseName?: string,
 ) => {
   groups &&
     groups.map((group: string) => {
@@ -74,6 +75,10 @@ export const setInitialValues = async (
     language
       ? await asyncStorage.setItem('language', language)
       : await asyncStorage.removeItem('language');
+
+    courseName
+      ? await asyncStorage.setItem('courseName', courseName)
+      : await asyncStorage.removeItem('courseName');
   } catch (err) {
     console.error(err, 'in setInitialValues');
   }
@@ -84,7 +89,9 @@ export const isInitialValuesSet = async () => {
     const course = await asyncStorage.getItem('course');
     const groups = await asyncStorage.getItem('groups');
     const language = await asyncStorage.getItem('language');
-    return course !== null && groups !== null && language !== null;
+    const courseName = await asyncStorage.getItem('courseName');
+
+    return course && groups && language && courseName;
   } catch (err) {
     console.error(err, 'in isInitialValuesSet');
     return false;

@@ -53,9 +53,9 @@ const App: React.FC = () => {
                   <GestureHandlerRootView className="flex-1 bg-inherit">
                     <TimetableScreen />
                   </GestureHandlerRootView>
-                )) || <SetupScreen />
+                )) || <SetupScreen isSetup={!initialValuesSet} />
               ) : (
-                <SetupScreen />
+                <SetupScreen isSetup={!initialValuesSet} />
               )
             ) : (
               <Loader />

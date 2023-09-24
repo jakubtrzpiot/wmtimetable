@@ -80,6 +80,7 @@ type SettingsIconProps = {
   onLongPress?: () => void;
   name: string;
   size?: number;
+  label?: string;
   customColor?: string;
   className?: string;
 };
@@ -89,6 +90,7 @@ export const IconComponent = ({
   onLongPress,
   name,
   size,
+  label,
   customColor,
   className,
 }: SettingsIconProps) => {
@@ -99,7 +101,14 @@ export const IconComponent = ({
       className={className}
       onPress={onPress}
       onLongPress={onLongPress}>
-      <Icon name={name} size={size} color={customColor ? customColor : color} />
+      <View className="flex-col items-center">
+        <Icon
+          name={name}
+          size={size}
+          color={customColor ? customColor : color}
+        />
+        <TextComponent className="leading-3 -mt-1">{label}</TextComponent>
+      </View>
     </TouchableOpacity>
   );
 };
