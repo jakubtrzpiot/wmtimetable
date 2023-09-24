@@ -72,12 +72,11 @@ export default App;
 //BEFORE RELEASE
 //[x] make date slider functional
 //[x] go to today on weekDay click
-//TODO add polish language
-//TODO make an app icon
+//[x] add polish language
+//[x] make an app icon
 //TODO get the metarial ui colors
 //TODO add a splash screen
 //TODO add better alerts
 //TODO add readme
-//TODO add color picker on long press
-//TODO add prompt before removing asyncstorage values when changing plan
+//[x] add color picker on long press
 //FIXME fix a bug with date slider where it wont go to starting index on app launch
