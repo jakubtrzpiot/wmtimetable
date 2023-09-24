@@ -11,7 +11,7 @@ const RoomModule = ({room}: Room) => {
         <TextComponent
           key={index}
           className={`${
-            room === 'ONLINE' ? 'text-xs leading-[13px]' : 'text-lg leading-5'
+            room.length >= 6 ? 'text-xs leading-[13px]' : room.length>=5 ? 'text-base leading-4' :'text-lg leading-5'
           } text-center`}>
           {letter}
         </TextComponent>

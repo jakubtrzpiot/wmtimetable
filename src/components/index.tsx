@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {TextInputProps} from 'react-native/Libraries/Components/TextInput/TextInput';
-import {ThemeContext} from '../utils/Context';
+import {ThemeContext} from '../utils/context';
 
 type TextComponentProps = {
   className?: string;
@@ -39,7 +39,7 @@ export const TextInputComponent = (props: TextInputProps) => {
   const {className} = props;
   return (
     <TextInput
-      className={`font-lexend-semibold py-2 border-b-[1.25px] mb-8 ${className}`}
+      className={`font-lexend-semibold py-1 px-4 border-b-[1.25px] ml-4 text-center ${className}`}
       style={{
         color: color,
         borderColor: color,
@@ -101,6 +101,35 @@ export const IconComponent = ({
       onLongPress={onLongPress}>
       <Icon name={name} size={size} color={customColor ? customColor : color} />
     </TouchableOpacity>
+  );
+};
+
+export const SwitchComponent = ({
+  value,
+  left,
+  right,
+  onValueChange,
+}: {
+  value: boolean;
+  left: string;
+  right: string;
+  onValueChange: () => void;
+}) => {
+  const color = useContext(ThemeContext);
+
+  return (
+    <View className="flex-row items-center">
+      <TextComponent>{left}</TextComponent>
+      <View className="px-4">
+        <IconComponent
+          name={value ? 'toggle-right' : 'toggle-left'}
+          size={30}
+          customColor={value ? color : color}
+          onPress={onValueChange}
+        />
+      </View>
+      <TextComponent>{right}</TextComponent>
+    </View>
   );
 };
 

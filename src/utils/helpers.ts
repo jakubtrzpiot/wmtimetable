@@ -46,17 +46,19 @@ export const range = (start: number, stop?: number, step?: number) => {
 export const setInitialValues = async (
   course?: number,
   groups?: Array<string>,
+  language?: string,
 ) => {
   groups &&
-    groups.map((group: string) =>
-      group !== 'all' && !/\d/.test(group)
-        ? groups.push([...group].reverse().join(''))
-        : group,
-    );
+    groups.map((group: string) => {
+      if (group !== 'all' && !/\d/.test(group))
+        groups.push([...group].reverse().join(''));
+      else return group;
+    });
+
   try {
     const storedCourse = await asyncStorage.getItem('course');
-
-    course && storedCourse !== course.toString()
+    // console.log(storedCourse, course);
+    course && storedCourse && storedCourse.toString() !== course.toString()
       ? await asyncStorage.removeItem('timetable')
       : null;
 
@@ -68,6 +70,10 @@ export const setInitialValues = async (
       ? await asyncStorage.setItem('groups', groups) // ['l06', 'k05', 'p05', 'dg3', 'all']
       : await asyncStorage.removeItem('groups');
     // console.log(course, groups);
+
+    language
+      ? await asyncStorage.setItem('language', language)
+      : await asyncStorage.removeItem('language');
   } catch (err) {
     console.error(err, 'in setInitialValues');
   }
@@ -77,7 +83,8 @@ export const isInitialValuesSet = async () => {
   try {
     const course = await asyncStorage.getItem('course');
     const groups = await asyncStorage.getItem('groups');
-    return course !== null && groups !== null;
+    const language = await asyncStorage.getItem('language');
+    return course !== null && groups !== null && language !== null;
   } catch (err) {
     console.error(err, 'in isInitialValuesSet');
     return false;
@@ -95,7 +102,7 @@ export const fetchTimetable = async (refresh: boolean = false) => {
     const timetable = await parseTimetable(course);
     !storedTimetable || refresh
       ? (await asyncStorage.setItem('timetable', timetable),
-        console.log('timetable set'))
+        console.log('timetable set', course))
       : null;
   } catch (err) {
     console.error(err, 'in fetchTimetable');

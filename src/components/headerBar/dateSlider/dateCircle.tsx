@@ -1,20 +1,29 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useContext} from 'react';
+import {TouchableOpacity} from 'react-native';
 import {TextComponent, ViewComponent} from '../../../components';
 import {getDay} from '../../../utils/helpers';
+import {SetDateContext, LanguageContext} from '../../../utils/context';
 
 const DateCircle = ({date, i}: {date: Date; i: number}) => {
+  const lang = useContext(LanguageContext);
+  const en = lang === 'en';
   const day = getDay(date);
   const today = new Date().getTime();
-  const dayLetter = ['M', 'T', 'W', 'T', 'F', 'S', 'S'][day];
+  const dayLetter = date
+    .toLocaleDateString(en ? 'en-us' : 'pl-pl', {
+      weekday: 'long',
+    })[0]
+    .toUpperCase();
   const moreSpace = !(i === -14 || i === 14) && day === 0;
 
+  const handlePress = useContext(SetDateContext);
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => handlePress(date)}
       className={`pt-2 pb-1 justify-center items-center ${
         moreSpace ? 'ml-4' : ''
       } ${
-        today - 1000 * 60 * 60 * 24 > date.getTime() && i ? 'opacity-25' : ''
+        today - 1000 * 60 * 60 * 24 > date.getTime() && i ? 'opacity-[.35]' : ''
       }`}>
       <TextComponent className="mb-1">{dayLetter}</TextComponent>
       <ViewComponent
@@ -25,7 +34,7 @@ const DateCircle = ({date, i}: {date: Date; i: number}) => {
           {date.getDate()}
         </TextComponent>
       </ViewComponent>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -1,6 +1,7 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from './constants';
 import {Timetable, Subject} from '../types/timetable.types';
+import asyncStorage from './asyncStorage';
 
 const transpose = (array: Array<any>) => {
   return array[0].map((_: any, i: number) => {
@@ -10,7 +11,7 @@ const transpose = (array: Array<any>) => {
   });
 };
 
-const unwrap = (node: any) => {
+const unwrap = (node: any, lang: string) => {
   if (node.childNodes.length > 1 || node.firstChild.childNodes) {
     //one or more subjects
     return Array.from(node.getElementsByAttribute('class', 'p'))
@@ -74,27 +75,28 @@ const unwrap = (node: any) => {
           .split('/')[0];
         room === 'e-learning' ? (room = 'ONLINE') : null;
 
+        const en = lang === 'en';
         switch (type) {
           case 'j':
-            type = 'english';
+            type = en ? 'english' : 'język obcy';
             break;
           case 'w':
-            type = 'lecture';
+            type = en ? 'lecture' : 'wykład';
             break;
           case 'ć':
-            type = 'practical';
+            type = en ? 'practical' : 'ćwiczenia';
             break;
           case 'l':
-            type = 'lab';
+            type = en ? 'lab' : 'laboratorium';
             break;
           case 's':
-            type = 'seminar';
+            type = en ? 'seminar' : 'seminarium';
             break;
           case 'p':
-            type = 'project';
+            type = en ? 'project' : 'projekt';
             break;
           case 'k':
-            type = 'computer lab';
+            type = en ? 'computer lab' : 'pracownia komputerowa';
             break;
           default:
         }
@@ -116,6 +118,7 @@ const unwrap = (node: any) => {
 };
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
+  const lang = await asyncStorage.getItem('language');
   // console.log('course:', course);
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
@@ -147,7 +150,7 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
           const time = hours[i];
           return {
             time,
-            subject: unwrap(lesson) || null,
+            subject: unwrap(lesson, lang) || null,
           };
         });
       });

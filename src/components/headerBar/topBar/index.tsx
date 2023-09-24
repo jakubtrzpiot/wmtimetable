@@ -4,7 +4,7 @@ import WeekDay from './weekDay';
 import WeekType from './weekType';
 import {IconComponent} from '../../../components';
 import asyncStorage from '../../../utils/asyncStorage';
-import {RefreshContext} from '../../../utils/Context';
+import {RefreshContext} from '../../../utils/context';
 
 type TopBarProps = {week: string; date: Date};
 
@@ -12,12 +12,7 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
   const useRefresh = useContext(RefreshContext);
 
   const handlePlanChange = () => {
-    const removeItems = async () => {
-      asyncStorage.removeItem('course');
-      asyncStorage.removeItem('groups');
-      asyncStorage.removeItem('timetable');
-    };
-    removeItems().then(() => useRefresh('submit'));
+    useRefresh('setup');
   };
 
   const getRgb = () => Math.floor(Math.random() * 256);

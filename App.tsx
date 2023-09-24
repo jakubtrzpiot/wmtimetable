@@ -9,7 +9,7 @@ import {
   ThemeContext,
   LanguageContext,
   RefreshContext,
-} from './src/utils/Context';
+} from './src/utils/context';
 import asyncStorage from './src/utils/asyncStorage';
 
 const App: React.FC = () => {
@@ -17,12 +17,13 @@ const App: React.FC = () => {
   const [color, setColor] = useState('#daecff');
   const [language, setLanguage] = useState('en');
   const [loading, setLoading] = useState(true);
+  const [setupOpen, setSetupOpen] = useState(false);
 
   useEffect(() => {
     useRefresh();
   }, [initialValuesSet]);
 
-  const useRefresh = (item?: 'color' | 'lang' | 'submit') => {
+  const useRefresh = (item?: 'color' | 'lang' | 'submit' | 'setup') => {
     if (!item || item === 'lang')
       asyncStorage
         .getItem('language')
@@ -31,8 +32,14 @@ const App: React.FC = () => {
       asyncStorage.getItem('color').then(result => result && setColor(result));
     if (!item || item === 'submit')
       isInitialValuesSet().then(
-        result => (setInitialValuesSet(result), setLoading(false)),
+        result => (
+          setInitialValuesSet(result), setLoading(false), setSetupOpen(false)
+        ),
       );
+    if (item === 'setup') {
+      setSetupOpen(!setupOpen);
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,11 +48,15 @@ const App: React.FC = () => {
         <ThemeContext.Provider value={color}>
           <View className="flex-1 bg-[#121212]">
             {!loading ? (
-              (initialValuesSet && (
-                <GestureHandlerRootView className="flex-1 bg-inherit">
-                  <TimetableScreen />
-                </GestureHandlerRootView>
-              )) || <SetupScreen />
+              initialValuesSet ? (
+                (!setupOpen && (
+                  <GestureHandlerRootView className="flex-1 bg-inherit">
+                    <TimetableScreen />
+                  </GestureHandlerRootView>
+                )) || <SetupScreen />
+              ) : (
+                <SetupScreen />
+              )
             ) : (
               <Loader />
             )}
@@ -59,6 +70,14 @@ const App: React.FC = () => {
 export default App;
 
 //BEFORE RELEASE
-//TODO make date slider functional
-//TODO got to today on wekDay click
+//[x] make date slider functional
+//[x] go to today on weekDay click
 //TODO add polish language
+//TODO make an app icon
+//TODO get the metarial ui colors
+//TODO add a splash screen
+//TODO add better alerts
+//TODO add readme
+//TODO add color picker on long press
+//TODO add prompt before removing asyncstorage values when changing plan
+//FIXME fix a bug with date slider where it wont go to starting index on app launch

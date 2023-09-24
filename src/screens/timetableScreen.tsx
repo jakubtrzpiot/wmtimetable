@@ -4,7 +4,6 @@ import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import {Day} from '../types/timetable.types';
 import {
   fetchTimetable,
-  fetchCourseName,
   getTimetableByDay,
   getDay,
   addDays,
@@ -14,6 +13,7 @@ import {SwipeComponent, Loader} from '../components';
 import HeaderBar from '../components/headerBar';
 import LessonTile from '../components/lessonTile';
 import Empty from '../components/lessonTile/empty';
+import {SetDateContext} from '../utils/context';
 
 const TimetableScreen = () => {
   const [timetable, setTimetable] = useState<Day>();
@@ -61,8 +61,10 @@ const TimetableScreen = () => {
 
   return week && date ? (
     <>
-      <HeaderBar week={week} date={date} />
-
+      <SetDateContext.Provider
+        value={date => (setDate(date), setDidRefresh(true))}>
+        <HeaderBar week={week} date={date} />
+      </SetDateContext.Provider>
       {timetable || day === 5 || day === 6 ? (
         <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
           <SafeAreaView className="flex-1">
@@ -93,6 +95,5 @@ const TimetableScreen = () => {
     <Loader />
   );
 };
-//TODO get the metarial ui colors
 
 export default TimetableScreen;
