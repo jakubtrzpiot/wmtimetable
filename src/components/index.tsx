@@ -15,10 +15,7 @@ type TextComponentProps = {
   children: React.ReactNode;
 };
 
-export const TextComponent = (
-  {className, children}: TextComponentProps,
-  props: any,
-) => {
+export const TextComponent = ({className, children}: TextComponentProps) => {
   const color = useContext(ThemeContext);
 
   return (
@@ -26,8 +23,7 @@ export const TextComponent = (
       className={`font-lexend-semibold ${className}`}
       style={
         !className || className?.search('!text') === -1 ? {color: color} : null
-      }
-      {...props}>
+      }>
       {children}
     </Text>
   );
@@ -128,8 +124,10 @@ export const SwitchComponent = ({
 
   return (
     <View className="flex-row items-center">
-      <TextComponent>{left}</TextComponent>
-      <View className="px-4">
+      <TextComponent>
+        <Text>{left}</Text>
+      </TextComponent>
+      <View className="px-4 py-4 -mb-5">
         <IconComponent
           name={value ? 'toggle-right' : 'toggle-left'}
           size={30}

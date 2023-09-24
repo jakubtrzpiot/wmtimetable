@@ -69,14 +69,14 @@ const TimetableScreen = () => {
         <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
           <SafeAreaView className="flex-1">
             <FlatList
-              className="min-h-full pt-2 px-4"
+              className="min-h-full pt-3 px-4"
               showsVerticalScrollIndicator={true}
               data={timetable}
               renderItem={({item}) => <LessonTile {...item} />}
               ItemSeparatorComponent={() => <View className="h-4" />}
               ListEmptyComponent={() => <Empty />}
               ListFooterComponent={() => (
-                <View className="h-4" /> //add space at the bottom
+                <View className="h-5" /> //add space at the bottom
               )}
               refreshControl={
                 <RefreshControl
