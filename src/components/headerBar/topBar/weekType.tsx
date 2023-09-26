@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import {TextComponent} from '../..';
+import {TextComponent} from '../../core';
 import {LanguageContext} from '../../../utils/context';
 
-type WeekType = {weekType: string};
+interface WeekType {weekType: string};
 
 const WeekType = ({weekType}: WeekType) => {
   const lang = useContext(LanguageContext);

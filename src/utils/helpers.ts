@@ -1,4 +1,4 @@
-import {Lesson, Subject} from '../types/timetable.types';
+import {Lesson, Subject} from '../interfaces/timetable.interfaces';
 import asyncStorage from './asyncStorage';
 import {parseTimetable, parseCourseName} from './parser';
 

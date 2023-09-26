@@ -1,6 +1,6 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from './constants';
-import {Timetable, Subject} from '../types/timetable.types';
+import {Timetable, Subject} from '../interfaces/timetable.interfaces';
 import asyncStorage from './asyncStorage';
 
 const transpose = (array: Array<any>) => {

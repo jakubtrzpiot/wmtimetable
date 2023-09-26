@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
-import {Day} from '../types/timetable.types';
+import {Day} from '../interfaces/timetable.interfaces';
 import {
   fetchTimetable,
   getTimetableByDay,
@@ -9,11 +9,11 @@ import {
   addDays,
   getWeekType,
 } from '../utils/helpers';
-import {SwipeComponent, Loader} from '../components';
+import {SwipeComponent, Loader} from '../components/core';
 import HeaderBar from '../components/headerBar';
 import LessonTile from '../components/lessonTile';
 import Empty from '../components/lessonTile/empty';
-import {SetDateContext} from '../utils/context';
+import {SetDateContext, ThemeContext} from '../utils/context';
 
 const TimetableScreen = () => {
   const [timetable, setTimetable] = useState<Day>();
@@ -22,6 +22,7 @@ const TimetableScreen = () => {
   const [date, setDate] = useState<Date>(new Date());
   const [week, setWeek] = useState<string>('');
   const [day, setDay] = useState<number>(0);
+  const colorHex = useContext(ThemeContext);
 
   useEffect(() => {
     const day = getDay(date);
@@ -80,6 +81,8 @@ const TimetableScreen = () => {
               )}
               refreshControl={
                 <RefreshControl
+                  colors={['#121212']}
+                  progressBackgroundColor={colorHex}
                   refreshing={isRefreshing}
                   onRefresh={() => handleRefresh()}
                 />

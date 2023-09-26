@@ -1,4 +1,4 @@
-type SubjectMap = {
+interface SubjectMap {
   [key: string]: string;
 };
 

@@ -4,7 +4,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {isInitialValuesSet} from './src/utils/helpers';
 import TimetableScreen from './src/screens/timetableScreen';
 import SetupScreen from './src/screens/setupScreen';
-import {Loader} from './src/components';
+import {Loader} from './src/components/core';
 import {
   ThemeContext,
   LanguageContext,
@@ -27,19 +27,26 @@ const App: React.FC = () => {
     if (!item || item === 'lang')
       asyncStorage
         .getItem('language')
-        .then(result => result && setLanguage(result));
+        .then(
+          result => (
+            result && setLanguage(result), console.log('language set:', result)
+          ),
+        );
     if (!item || item === 'color')
-      asyncStorage.getItem('color').then(result => result && setColor(result));
+      asyncStorage
+        .getItem('color')
+        .then(
+          result => (
+            result && setColor(result), console.log('color set:', result)
+          ),
+        );
     if (!item || item === 'submit')
       isInitialValuesSet().then(
         result => (
           setInitialValuesSet(result), setLoading(false), setSetupOpen(false)
         ),
       );
-    if (item === 'setup') {
-      setSetupOpen(!setupOpen);
-      setLoading(false);
-    }
+    if (item === 'setup') setSetupOpen(!setupOpen), setLoading(false);
   };
 
   return (
@@ -48,12 +55,12 @@ const App: React.FC = () => {
         <ThemeContext.Provider value={color}>
           <View className="flex-1 bg-[#121212]">
             {!loading ? (
-              initialValuesSet ? (
-                (!setupOpen && (
-                  <GestureHandlerRootView className="flex-1 bg-inherit">
-                    <TimetableScreen />
-                  </GestureHandlerRootView>
-                )) || <SetupScreen isSetup={!initialValuesSet} />
+              !initialValuesSet ? (
+                <SetupScreen isSetup={!initialValuesSet} />
+              ) : !setupOpen ? (
+                <GestureHandlerRootView className="flex-1 bg-inherit">
+                  <TimetableScreen />
+                </GestureHandlerRootView>
               ) : (
                 <SetupScreen isSetup={!initialValuesSet} />
               )

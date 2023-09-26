@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {TouchableOpacity} from 'react-native';
-import {TextComponent, ViewComponent} from '../../../components';
+import {TextComponent, ViewComponent} from '../../core';
 import {getDay} from '../../../utils/helpers';
 import {SetDateContext, LanguageContext} from '../../../utils/context';
 
@@ -12,7 +12,8 @@ const DateCircle = ({date, i}: {date: Date; i: number}) => {
   const dayLetter = date
     .toLocaleDateString(en ? 'en-us' : 'pl-pl', {
       weekday: 'long',
-    })[0]
+    })
+    .slice(0, 1)
     .toUpperCase();
   const moreSpace = !(i === -14 || i === 14) && day === 0;
 

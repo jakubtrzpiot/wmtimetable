@@ -1,26 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  View,
-  Modal,
-  Alert,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {View, Alert} from 'react-native';
 import WeekDay from './weekDay';
 import WeekType from './weekType';
-import {
-  IconComponent,
-  TextComponent,
-  TextInputComponent,
-} from '../../../components';
+import {IconComponent} from '../../core';
 import asyncStorage from '../../../utils/asyncStorage';
 import {
   LanguageContext,
   RefreshContext,
   ThemeContext,
 } from '../../../utils/context';
+import ChangeColorModal from './changeColorModal';
 
-type TopBarProps = {week: string; date: Date};
+interface TopBarProps {
+  week: string;
+  date: Date;
+}
 
 const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
   const [courseName, setCourseName] = useState<string>('');
@@ -29,7 +23,7 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
   const colorHex = useContext(ThemeContext);
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
-  const [userColor, setUserColor] = useState<string>('');
+  const [userColor, setUserColor] = useState<string>(colorHex);
 
   useEffect(() => {
     asyncStorage
@@ -52,7 +46,7 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
       })
       .join('');
 
-  const handleColorChange = () => {
+  const randomizeColor = () => {
     const color = {
       r: getRgb(),
       g: getRgb(),
@@ -60,23 +54,25 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
     };
 
     const hex = rgbToHex(color.r, color.g, color.b);
-    console.log('color', hex);
-    asyncStorage.setItem('color', hex).then(() => useRefresh('color'));
+    setUserColor(hex);
   };
 
-  const handleColorSet = (hex: string) => {
-    console.log('color', hex);
-    /^#([0-9A-F]{3}){1,2}$/i.test(hex)
-      ? asyncStorage
-          .setItem('color', hex)
-          .then(() => (useRefresh('color'), setModalOpen(false)))
-      : Alert.alert(
-          en ? 'Invalid color' : 'Niepoprawny kolor',
-          en
-            ? 'Please enter a valid hex color'
-            : 'Proszę podać poprawny kolor hex',
-        );
+  const handleColorChange = (hex: string) => {
+    hex !== colorHex
+      ? /^#([0-9A-F]{3}){1,2}$/i.test(hex)
+        ? asyncStorage
+            .setItem('color', hex)
+            .then(() => (useRefresh('color'), setModalOpen(false)))
+        : Alert.alert(
+            en ? 'Invalid color' : 'Niepoprawny kolor',
+            en
+              ? 'Please enter a valid hex color'
+              : 'Proszę podać poprawny kolor hex',
+          )
+      : setModalOpen(false);
   };
+
+  const closeModal = () => (setModalOpen(false), setUserColor(colorHex));
 
   return (
     <View className="flex-row justify-between items-center">
@@ -84,47 +80,25 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
         <WeekDay day={date} />
         <WeekType weekType={week} />
       </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalOpen}
-        onRequestClose={() => setModalOpen(false)}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => setModalOpen(false)}
-          className="flex-1 items-center justify-center bg-[#121212]/80">
-          <TouchableWithoutFeedback>
-            <View
-              style={{borderColor: colorHex}}
-              className={`py-6 px-12 bg-[#121212] border-2 rounded-3xl flex-col justify-between items-center`}>
-              <View className="flex-row items-center mb-8">
-                <TextComponent className="pr-4">
-                  {en ? 'Hex color: ' : 'Kolor hex: '}
-                </TextComponent>
-                <TextInputComponent
-                  onChangeText={text => setUserColor(text)}
-                  className="font-lexend-semibold m-0 py-1 px-2 border-b-[1.25px] text-center w-1/3"
-                  maxLength={7}
-                />
-              </View>
-              <TouchableOpacity
-                className="py-4 px-8 items-center rounded-2xl self-center"
-                onPress={() => handleColorSet(userColor)}>
-                <TextComponent>{en ? 'Save' : 'Zapisz'}</TextComponent>
-              </TouchableOpacity>
-            </View>
-          </TouchableWithoutFeedback>
-        </TouchableOpacity>
-      </Modal>
 
-      <View className="flex-row">
+      <ChangeColorModal
+        en={en}
+        modalOpen={modalOpen}
+        closeModal={closeModal}
+        colorHex={colorHex}
+        handleColorChange={handleColorChange}
+        userColor={userColor}
+        setUserColor={setUserColor}
+        randomizeColor={randomizeColor}
+      />
+
+      <View className="flex-row items-center justify-end">
         <IconComponent
           className="px-4 py-2"
-          name="droplet"
+          name="palette"
           size={24}
           label={colorHex}
-          onPress={() => handleColorChange()}
-          onLongPress={() => (setModalOpen(true), console.log('long press'))}
+          onPress={() => setModalOpen(true)}
         />
         <IconComponent
           className="px-4 py-2"

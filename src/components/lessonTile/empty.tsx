@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View} from 'react-native';
-import {TextComponent} from '..';
+import {TextComponent} from '../core';
 import {LanguageContext} from '../../utils/context';
 
 const Empty = () => {

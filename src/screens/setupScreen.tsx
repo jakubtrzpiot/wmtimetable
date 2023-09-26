@@ -1,11 +1,13 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, TouchableHighlight, Alert, Modal} from 'react-native';
+import {View, Alert, Modal} from 'react-native';
 import {
   TextComponent,
-  TextInputComponent,
+  LabeledComponent,
+  LabeledTextInputComponent,
   SwitchComponent,
   Loader,
-} from '../components';
+  ButtonComponent,
+} from '../components/core';
 import {
   setInitialValues,
   fetchTimetable,
@@ -15,6 +17,7 @@ import {RefreshContext} from '../utils/context';
 import asyncStorage from '../utils/asyncStorage';
 
 const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
+  //TODO refactor this mess
   const [course, setCourse] = useState<string>('');
   const [previousCourse, setPreviousCourse] = useState<string>('');
   const [lab, onChangeLab] = useState<string>('');
@@ -148,88 +151,77 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
       visible={modalOpen}
       onRequestClose={() => !isSetup && handleBack()}>
       {(!loading && (
-        <View className="flex-1 py-8 px-4 bg-[#121212]">
-          <View className="flex-row items-center">
-            <TextComponent className="w-3/5">
-              {en ? 'Enter your course number:' : 'Wpisz numer planu:'}
-            </TextComponent>
-            <TextInputComponent
-              inputMode="numeric"
-              maxLength={2}
-              onChangeText={text => onChangeCourse(text)}
-              defaultValue={course}
-            />
-          </View>
+        <View className="flex-1 px-4 mt-20 bg-[#121212]">
+          <LabeledTextInputComponent
+            underline
+            label={en ? 'Enter your course number:' : 'Wpisz numer planu:'}
+            inputMode="numeric"
+            maxLength={2}
+            onChangeText={text => onChangeCourse(text)}
+            value={course}
+          />
 
           <TextComponent className="mb-4">{`${
             en ? 'Selected course:' : 'Wybrany kierunek:'
           } ${courseName}`}</TextComponent>
 
-          <View className="flex-row items-center mb-4">
-            <TextComponent className="w-3/5">
-              {en ? 'Lab group number:' : 'Numer grupy laboratoryjnej:'}
-            </TextComponent>
-            <TextInputComponent
-              inputMode="numeric"
-              maxLength={2}
-              onChangeText={text => onChangeLab(text)}
-              value={lab}
-            />
-          </View>
+          <LabeledTextInputComponent
+            underline
+            className="mb-4"
+            label={en ? 'Lab group number:' : 'Numer grupy laboratoryjnej:'}
+            inputMode="numeric"
+            maxLength={2}
+            onChangeText={text => onChangeLab(text)}
+            value={lab}
+          />
 
-          <View className="flex-row items-center mb-4">
-            <TextComponent className="w-3/5">
-              {en ? 'Computer lab group number:' : 'Numer grupy komputerowej:'}
-            </TextComponent>
-            <TextInputComponent
-              inputMode="numeric"
-              maxLength={2}
-              onChangeText={text => onChangeComputerLab(text)}
-              value={computerLab}
-            />
-          </View>
+          <LabeledTextInputComponent
+            underline
+            className="mb-4"
+            label={
+              en ? 'Computer lab group number:' : 'Numer grupy komputerowej:'
+            }
+            inputMode="numeric"
+            maxLength={2}
+            onChangeText={text => onChangeComputerLab(text)}
+            value={computerLab}
+          />
 
-          <View className="flex-row items-center mb-4">
-            <TextComponent className="w-3/5">
-              {en ? 'Project group number:' : 'Numer grupy projektowej:'}
-            </TextComponent>
-            <TextInputComponent
-              inputMode="numeric"
-              maxLength={2}
-              onChangeText={text => onChangeProject(text)}
-              value={project}
-            />
-          </View>
+          <LabeledTextInputComponent
+            underline
+            className="mb-4"
+            label={en ? 'Project group number:' : 'Numer grupy projektowej:'}
+            inputMode="numeric"
+            maxLength={2}
+            onChangeText={text => onChangeProject(text)}
+            value={project}
+          />
 
-          <View className="flex-row items-center mb-6">
-            <TextComponent className="w-3/5">
-              {en ? 'English group:' : 'Grupa językowa:'}
-            </TextComponent>
-            <TextInputComponent
-              inputMode="text"
-              maxLength={3}
-              onChangeText={text => onChangeEnglish(text)}
-              value={english}
-            />
-          </View>
+          <LabeledTextInputComponent
+            underline
+            className="mb-2"
+            label={en ? 'English group:' : 'Grupa językowa:'}
+            inputMode="text"
+            maxLength={3}
+            onChangeText={text => onChangeEnglish(text)}
+            value={english}
+          />
 
-          <View className="flex-row items-center mb-8">
-            <TextComponent className="w-3/5">
-              {en ? 'Language:' : 'Język:'}
-            </TextComponent>
+          <LabeledComponent
+            className="mb-8"
+            label={en ? 'Language:' : 'Język:'}>
             <SwitchComponent
               left="PL"
               right="EN"
               value={en}
               onValueChange={() => handleLanguageChange()}
             />
-          </View>
+          </LabeledComponent>
 
-          <TouchableHighlight
-            className="py-4 px-8 items-center rounded-2xl w-1/2 self-center"
-            onPress={() => handleSubmit()}>
-            <TextComponent>{en ? 'Save' : 'Zapisz'}</TextComponent>
-          </TouchableHighlight>
+          <ButtonComponent
+            full
+            onPress={() => handleSubmit()}
+            text={en ? 'Save' : 'Zapisz'}></ButtonComponent>
         </View>
       )) || <Loader />}
     </Modal>
