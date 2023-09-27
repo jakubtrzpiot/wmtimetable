@@ -24,7 +24,7 @@ export const getWeekType = (date: Date): string => {
       (7 * 24 * 60 * 60 * 1000),
   );
 
-  return weekNumber % 2 ? 'n' : 'p';
+  return weekNumber % 2 ? 'p' : 'n';
 };
 
 export const range = (start: number, stop?: number, step?: number) => {
@@ -139,16 +139,6 @@ export const getTimetableByDay = async (day: number, week: string) => {
             (lesson: Lesson) => lesson !== null && lesson.subject !== null,
           )
       : null;
-
-    // console.log(
-    //   'today set',
-    //   //   '\nday:',
-    //   //   day,
-    //   //   '\nweek:',
-    //   //   week,
-    //   //   '\ntoday:',
-    //   //   result,
-    // );
     return result;
   } catch (err) {
     console.error(err, 'in getTimetableByDay');

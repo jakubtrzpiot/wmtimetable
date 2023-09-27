@@ -6,7 +6,7 @@ import {ThemeContext} from '../../utils/context';
 interface ButtonComponentProps extends PressableProps {
   text: string;
   small?: boolean;
-full?: boolean;
+  full?: boolean;
 }
 
 const ButtonComponent = (props: ButtonComponentProps) => {

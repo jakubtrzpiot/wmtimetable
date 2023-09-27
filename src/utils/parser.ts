@@ -11,7 +11,7 @@ const transpose = (array: Array<any>) => {
   });
 };
 
-const unwrap = (node: any, lang: string) => {
+const unwrap = (node: any) => {
   if (node.childNodes.length > 1 || node.firstChild.childNodes) {
     //one or more subjects
     return Array.from(node.getElementsByAttribute('class', 'p'))
@@ -75,33 +75,6 @@ const unwrap = (node: any, lang: string) => {
           .split('/')[0];
         room === 'e-learning' ? (room = 'ONLINE') : null;
 
-        const en = lang === 'en';
-        switch (type) {
-          case 'j':
-            type = en ? 'english' : 'język obcy';
-            break;
-          case 'w':
-            type = en ? 'lecture' : 'wykład';
-            break;
-          case 'ć':
-            type = en ? 'practical' : 'ćwiczenia';
-            break;
-          case 'l':
-            type = en ? 'lab' : 'laboratorium';
-            break;
-          case 's':
-            type = en ? 'seminar' : 'seminarium';
-            break;
-          case 'p':
-            type = en ? 'project' : 'projekt';
-            break;
-          case 'k':
-            type = en ? 'computer lab' : 'pracownia komputerowa';
-            break;
-          default:
-        }
-        type = type[0].toUpperCase() + type.slice(1);
-
         return {
           name,
           type,
@@ -119,7 +92,6 @@ const unwrap = (node: any, lang: string) => {
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
   const lang = await asyncStorage.getItem('language');
-  // console.log('course:', course);
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
@@ -150,7 +122,7 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
           const time = hours[i];
           return {
             time,
-            subject: unwrap(lesson, lang) || null,
+            subject: unwrap(lesson) || null,
           };
         });
       });
