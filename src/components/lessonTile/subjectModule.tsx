@@ -32,7 +32,8 @@ const SubjectModule = ({name, teacher, type}: Subject) => {
       break;
     default:
   }
-  type = type[0].toUpperCase() + type.slice(1);
+
+  type = type && type[0].toUpperCase() + type.slice(1);
   return (
     <ViewComponent className="grow rounded-3xl justify-between px-5 py-3 mr-2">
       <TextComponent className="w-56 text-base leading-5 !text-black tracking-wider">

@@ -20,7 +20,7 @@ const unwrap = (node: any) => {
           subject.firstChild.nodeValue.split(' ')[0].trim()[0] !== '#',
       )
       .map((subject: any, index: number) => {
-        const p = subject.firstChild.nodeValue;
+        const p = subject.firstChild.nodeValue.replace(/  +/g, ' ');
         const name =
           p.substr(0, 2) === 'J '
             ? p.split(' ').slice(0, 2).join(' ').trim().split('-')[0]
@@ -55,9 +55,10 @@ const unwrap = (node: any) => {
         const t =
           p.substr(0, 2) === 'J '
             ? 'j'
-            : p.split(' ')[1].trim().split('-')[0].toLowerCase();
+            : p.trim().split(' ')[1].split('-')[0].toLowerCase();
 
         let type = t[0];
+        console.log('p:', p, 't:', t);
         const group =
           t.length > 1
             ? t

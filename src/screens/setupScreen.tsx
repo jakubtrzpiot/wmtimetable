@@ -99,13 +99,13 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
           'Please fill all the fields to continue.',
         ))
       : parseInt(course) > 0 &&
-        parseInt(lab) > 1 &&
+        parseInt(lab) > 0 &&
         parseInt(lab) < 9 &&
-        parseInt(computerLab) > 1 &&
+        parseInt(computerLab) > 0 &&
         parseInt(computerLab) < 9 &&
-        parseInt(project) > 1 &&
+        parseInt(project) > 0 &&
         parseInt(project) < 9 &&
-        english.length >= 2
+        /^[a-zA-Z]{2}\d?$/.test(english)
       ? ((groups = [
           `l${lab}`,
           `k${computerLab}`,
@@ -130,18 +130,21 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
     useRefresh('setup');
   };
 
-  const onChangeCourse = (text: string) => {
+  const onChangeCourse = (text: string, invert: boolean = false) => {
     setCourse(text);
     text
       ? fetchCourseName(parseInt(text))
           .then(data => data && setCourseName(data))
-          .catch(err => setCourseName('Not found'))
-      : setCourseName('No course');
+          .catch(err =>
+            setCourseName((invert ? !en : en) ? 'Not found' : 'Nie znaleziono'),
+          )
+      : setCourseName((invert ? !en : en) ? 'No course' : 'Brak kierunku');
   };
 
   const handleLanguageChange = () => {
     setLanguage(en ? 'pl' : 'en');
     setToggleClicks(toggleClicks + 1);
+    onChangeCourse(course, true);
   };
 
   return (
