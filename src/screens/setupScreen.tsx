@@ -130,7 +130,7 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
           english,
           'all',
         ]),
-        setInitialValues(parseInt(course), groups, lang, courseName).then(() =>
+        setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>
           fetchTimetable(
             !(course === previousCourse) || !(toggleClicks % 2 === 0),
           ).then(
@@ -158,11 +158,11 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
       : setCourseName((invert ? !en : en) ? 'No course' : 'Brak kierunku');
   };
 
-  const handleLanguageChange = () => {
-    setLanguage(en ? 'pl' : 'en');
-    setToggleClicks(toggleClicks + 1);
-    onChangeCourse(course, true);
-  };
+  // const handleLanguageChange = () => {
+  //   setLanguage(en ? 'pl' : 'en');
+  //   setToggleClicks(toggleClicks + 1);
+  //   onChangeCourse(course, true);
+  // };
 
   return (
     <Modal
@@ -174,7 +174,7 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
         <View className="flex-1 justify-center px-4 bg-[#121212]">
           <Image
             source={require('../components/core/appIcon.png')}
-            className="h-20 w-44 self-center mb-16"
+            className="h-20 w-[168] self-center mb-16"
             style={[{tintColor: color}]}
           />
           {/* <LabeledTextInputComponent
@@ -189,30 +189,38 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
           <TextComponent className="mb-4">{`${
             en ? 'Selected course:' : 'Wybrany kierunek:'
           } ${courseName}`}</TextComponent> */}
-          <PickerComponent
-            placeholder={en ? 'Select a course:' : 'Wybierz kierunek:'}
-            open={courseOpen}
-            value={course}
-            items={courseItems}
-            setOpen={setCourseOpen}
-            setValue={setCourse}
-            setItems={setCourseItems}
-            onChangeValue={(value: string) => value && onChangeCourse(value)}
-            onOpen={() => setEnglishOpen(false)}
-          />
+          <LabeledComponent
+            className="mb-7"
+            label={en ? 'Select a course:' : 'Wybierz kierunek:'}>
+            <PickerComponent
+              labeled
+              placeholder={en ? 'Course' : 'Kierunek'}
+              open={courseOpen}
+              value={course}
+              items={courseItems}
+              setOpen={setCourseOpen}
+              setValue={setCourse}
+              setItems={setCourseItems}
+              onChangeValue={(value: string) => value && onChangeCourse(value)}
+              onOpen={() => setEnglishOpen(false)}
+            />
+          </LabeledComponent>
 
-          <PickerComponent
-            placeholder={
-              en ? 'Select language group:' : 'Wybierz grupę językową:'
-            }
-            open={englishOpen}
-            value={english}
-            items={englishItems}
-            setOpen={setEnglishOpen}
-            setValue={onChangeEnglish}
-            setItems={setEnglishItems}
-            onOpen={() => setCourseOpen(false)}
-          />
+          <LabeledComponent
+            className="mb-5"
+            label={en ? 'English group:' : 'Grupa językowa:'}>
+            <PickerComponent
+              labeled
+              placeholder={en ? 'Group' : 'Grupa'}
+              open={englishOpen}
+              value={english}
+              items={englishItems}
+              setOpen={setEnglishOpen}
+              setValue={onChangeEnglish}
+              setItems={setEnglishItems}
+              onOpen={() => setCourseOpen(false)}
+            />
+          </LabeledComponent>
 
           <LabeledTextInputComponent
             underline
