@@ -58,7 +58,7 @@ const unwrap = (node: any) => {
             : p.trim().split(' ')[1].split('-')[0].toLowerCase();
 
         let type = t[0];
-        console.log('p:', p, 't:', t);
+
         const group =
           t.length > 1
             ? t

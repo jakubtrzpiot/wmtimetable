@@ -15,7 +15,7 @@ import asyncStorage from './src/utils/asyncStorage';
 const App: React.FC = () => {
   const [initialValuesSet, setInitialValuesSet] = useState(false);
   const [color, setColor] = useState('#daecff');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('pl');
   const [loading, setLoading] = useState(true);
   const [setupOpen, setSetupOpen] = useState(false);
 
