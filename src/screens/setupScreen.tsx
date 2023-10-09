@@ -28,7 +28,7 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
   const useRefresh = useContext(RefreshContext);
   const [courseName, setCourseName] = useState<string>('No course');
   const [lang, setLanguage] = useState<string>('en');
-  const [toggleClicks, setToggleClicks] = useState<number>(0);
+  // const [toggleClicks, setToggleClicks] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [modalOpen, setModalOpen] = useState<boolean>(true);
   const language = useContext(LanguageContext);
@@ -39,9 +39,9 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
   const [courseItems, setCourseItems] = useState([
-    {label: '11A1', value: '20'},
-    {label: '11A2', value: '21'},
-    {label: '11A3', value: '22'},
+    {label: '11A1', value: '22'},
+    {label: '11A2', value: '23'},
+    {label: '11A3', value: '24'},
   ]);
 
   const [englishOpen, setEnglishOpen] = useState(false);
@@ -121,7 +121,7 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
         parseInt(computerLab) >= 1 &&
         parseInt(computerLab) <= 5 &&
         parseInt(project) >= 1 &&
-        parseInt(project) <= 5 &&
+        (parseInt(project) <= 5 || parseInt(project) === 7) &&
         /^[a-zA-Z]{2}\d?$/.test(english)
       ? ((groups = [
           `l${lab}`,
@@ -132,7 +132,8 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
         ]),
         setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>
           fetchTimetable(
-            !(course === previousCourse) || !(toggleClicks % 2 === 0),
+            !(course === previousCourse),
+            // ||  !(toggleClicks % 2 === 0),
           ).then(
             () => (
               useRefresh('submit'), useRefresh('lang'), setModalOpen(false)

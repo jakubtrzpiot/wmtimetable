@@ -55,11 +55,11 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => closeModal()}
-        className="flex-1 items-center justify-center bg-[#121212]/80">
+        className="flex-1 items-center justify-center bg-[#121212]/75">
         <TouchableWithoutFeedback>
           <View
             style={{borderColor: colorHex}}
-            className={`w-3/4 pt-4 pl-6 pb-6 pr-4 bg-[#121212] border-2 rounded-[32px] flex-col `}>
+            className={`w-3/4 pt-4 pl-6 pb-6 pr-4 bg-[#121212] border-2 rounded-[32px] flex-col`}>
             <FlatList
               className="py-2"
               data={colors}
@@ -74,7 +74,7 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
                 />
               )}
             />
-            <View className="flex-row items-center justify-between pt-2 mb-6">
+            <View className="flex-row items-center justify-between pt-2 mb-4">
               <LabeledTextInputComponent
                 label={en ? 'Enter color:' : 'Podaj kolor:'}
                 onChangeText={text => setUserColor(text)}

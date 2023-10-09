@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {TextComponent, ViewComponent} from '../../core';
 import {getDay} from '../../../utils/helpers';
-import {SetDateContext, LanguageContext} from '../../../utils/context';
+import {DateContext, LanguageContext} from '../../../utils/context';
 
 const DateCircle = ({date, i}: {date: Date; i: number}) => {
   const lang = useContext(LanguageContext);
@@ -17,10 +17,10 @@ const DateCircle = ({date, i}: {date: Date; i: number}) => {
     .toUpperCase();
   const moreSpace = !(i === -14 || i === 14) && day === 0;
 
-  const handlePress = useContext(SetDateContext);
+  const {setDate} = useContext(DateContext);
   return (
     <TouchableOpacity
-      onPress={() => handlePress(date)}
+      onPress={() => setDate(date)}
       className={`pt-2 pb-1 justify-center items-center ${
         moreSpace ? 'ml-4' : ''
       } ${

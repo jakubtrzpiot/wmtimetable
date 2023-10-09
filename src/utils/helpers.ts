@@ -27,6 +27,7 @@ export const getWeekType = (date: Date): string => {
   return weekNumber % 2 ? 'p' : 'n';
 };
 
+//genereate array of numbers from start to stop with step
 export const range = (start: number, stop?: number, step?: number) => {
   !stop ? ((stop = start), (start = 0)) : null;
   !step ? (step = 1) : null;

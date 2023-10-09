@@ -77,7 +77,7 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
   return (
     <View className="flex-row justify-between items-center">
       <View className="px-4 pb-2">
-        <WeekDay day={date} />
+        <WeekDay />
         <WeekType weekType={week} />
       </View>
 
@@ -97,7 +97,7 @@ const TopBar: React.FC<TopBarProps> = ({week, date}: TopBarProps) => {
           className="px-4 py-2"
           name="palette"
           size={24}
-          label={colorHex}
+          label={colorHex.toLowerCase()}
           onPress={() => setModalOpen(true)}
         />
         <IconComponent

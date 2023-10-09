@@ -2,12 +2,13 @@ import React, {useContext} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {TextComponent} from '../../core';
 import {addDays} from '../../../utils/helpers';
-import {SetDateContext, LanguageContext} from '../../../utils/context';
+import {DateContext, LanguageContext} from '../../../utils/context';
 
-const WeekDay = ({day}: {day: Date}) => {
+const WeekDay = () => {
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
   const today = new Date();
+  const {date: day, setDate} = useContext(DateContext);
 
   const toLocale = (date: Date) =>
     date.toLocaleDateString(en ? 'en-us' : 'pl-pl');
@@ -31,10 +32,8 @@ const WeekDay = ({day}: {day: Date}) => {
     }
   };
 
-  const handlePress = useContext(SetDateContext);
-
   return (
-    <TouchableOpacity onPress={() => handlePress(today)}>
+    <TouchableOpacity onPress={() => setDate(today)}>
       <TextComponent className="text-3xl">{renderDay()}</TextComponent>
     </TouchableOpacity>
   );

@@ -4,7 +4,7 @@ import {TextComponent, ViewComponent} from '../core';
 import {Time} from '../../interfaces/timetable.interfaces';
 
 const TimeModule = ({start, end}: Time) => (
-  <View className="flex-row mr-2.5 justify-end w-[45]">
+  <View className="flex-row mr-2.5 justify-end w-[44]">
     <View className="justify-between items-end mr-[6]">
       <TextComponent className="leading-4">{start}</TextComponent>
       <TextComponent className="leading-4">{end}</TextComponent>

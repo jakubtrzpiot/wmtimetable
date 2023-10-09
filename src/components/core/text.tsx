@@ -10,13 +10,17 @@ const TextComponent = (props: TextProps) => {
 
   return (
     <Text
-      className={classNames('font-lexend-semibold', props?.className)}
+      maxFontSizeMultiplier={1}
+      className={props?.className}
+      disabled={true}
       style={StyleSheet.flatten([
         setColor && {
           color: color,
         },
+        {fontFamily: 'Lexend-SemiBold'},
         props?.style,
-      ])}>
+      ])}
+      {...props}>
       {props?.children}
     </Text>
   );
