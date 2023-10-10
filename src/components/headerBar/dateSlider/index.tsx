@@ -10,35 +10,42 @@ interface DateSliderProps {
 
 const dateSlider = ({date}: DateSliderProps) => {
   const flatListRef = useRef<FlatList>(null);
-  const days = 3 * 7;
-  const dateArray = range(-days, days + 1).map(i => ({
+  const days = 2 * 7;
+  let dateArray = new Array(days * 2 + 1).fill(0);
+  dateArray = range(-days, days + 1).map(i => ({
     date: addDays(date, i),
     i: i,
   }));
 
   useEffect(() => {
-    flatListRef?.current?.scrollToIndex({
-      index: days + 1,
-      animated: true,
-      viewPosition: 0.5,
-    });
+    const scrollToCenter = () => {
+      flatListRef?.current?.scrollToIndex({
+        index: days + 1,
+        animated: true,
+        viewPosition: 0.5,
+      });
+    };
+
+    scrollToCenter();
   }, [date]);
 
   return (
     <>
       <FlatList
         data={dateArray}
-        renderItem={({item}) => <DateCircle date={item.date} i={item.i} />}
+        renderItem={({item}) => (
+          <DateCircle date={item.date} i={item.i} days={days} />
+        )}
         ItemSeparatorComponent={() => <View className="w-1" />}
         horizontal
         showsHorizontalScrollIndicator={false}
         ref={flatListRef}
-        ListFooterComponent={() => <View className="w-2" />}
-        ListHeaderComponent={() => <View className="w-2" />}
+        // ListFooterComponent={() => <View className="w-2" />}
+        // ListHeaderComponent={() => <View className="w-2" />}
         getItemLayout={(data, index) => {
           return {
             length: 32,
-            offset: (32 + 4) * index + 20,
+            offset: (32 + 4) * index - 4,
             index,
           };
         }}

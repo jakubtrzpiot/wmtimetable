@@ -1,4 +1,4 @@
-import {Lesson, Subject} from '../interfaces/timetable.interfaces';
+import {Lesson, Subject, Timetable} from '../interfaces/timetable.interfaces';
 import asyncStorage from './asyncStorage';
 import {parseTimetable, parseCourseName} from './parser';
 
@@ -25,6 +25,20 @@ export const getWeekType = (date: Date): string => {
   );
 
   return weekNumber % 2 ? 'p' : 'n';
+};
+
+export const stripNullValuesFromEdges = (array: Array<any>) => {
+  // Remove null values from the beginning of the array
+  while (array.length > 0 && array[0].subject === null) {
+    array.shift();
+  }
+
+  // Remove null values from the end of the array
+  while (array.length > 0 && array[array.length - 1].subject === null) {
+    array.pop();
+  }
+
+  return array;
 };
 
 //genereate array of numbers from start to stop with step
@@ -109,41 +123,33 @@ export const fetchTimetable = async (refresh: boolean = false) => {
     const storedTimetable = await asyncStorage.getItem('timetable');
     const timetable = await parseTimetable(course);
     !storedTimetable || refresh
-      ? (await asyncStorage.setItem('timetable', timetable),
-        console.log('timetable set', course))
+      ? await asyncStorage.setItem('timetable', timetable)
       : null;
   } catch (err) {
     console.error(err, 'in fetchTimetable');
   }
 };
 
-export const getTimetableByDay = async (day: number, week: string) => {
-  try {
-    const timetable = await asyncStorage.getItem('timetable');
-    const groups = await asyncStorage.getItem('groups');
+export const filter = (timetable: Timetable, groups: Array<string>) => {
+  const byWeek = (week: string) =>
+    timetable.map(
+      day =>
+        day &&
+        stripNullValuesFromEdges(
+          day.map(({time, subject}: Lesson) => ({
+            time,
+            subject:
+              (subject as Subject[])?.filter(
+                subject =>
+                  groups.includes(subject.group) && subject.week === week,
+              )[0] || null,
+          })),
+        ),
+    );
 
-    const result = timetable[day]
-      ? timetable[day]
-          ?.map(({time, subject}: Lesson) =>
-            subject !== null
-              ? {
-                  time,
-                  subject:
-                    (subject as Subject[])?.filter(
-                      subject =>
-                        groups.includes(subject.group) && subject.week === week,
-                    )[0] || null,
-                }
-              : null,
-          )
-          .filter(
-            (lesson: Lesson) => lesson !== null && lesson.subject !== null,
-          )
-      : null;
-    return result;
-  } catch (err) {
-    console.error(err, 'in getTimetableByDay');
-  }
+  const result = [...byWeek('n'), [], [], ...byWeek('p'), [], []];
+  // console.log(result);
+  return result;
 };
 
 export const fetchCourseName = async (course: number) => {

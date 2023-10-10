@@ -9,37 +9,36 @@ import {
   ThemeContext,
   LanguageContext,
   RefreshContext,
+  TimetableContext,
+  // ShowFreeContext,
 } from './src/utils/context';
 import asyncStorage from './src/utils/asyncStorage';
+import {Timetable} from './src/interfaces/timetable.interfaces';
 
 const App: React.FC = () => {
   const [initialValuesSet, setInitialValuesSet] = useState(false);
-  const [color, setColor] = useState('#daecff');
+  const [color, setColor] = useState('#c5e1f5');
   const [language, setLanguage] = useState('pl');
   const [loading, setLoading] = useState(true);
   const [setupOpen, setSetupOpen] = useState(false);
+  const [timetable, setTimetable] = useState<Timetable>([]);
+
+  // const [showFree, setShowFree] = useState<boolean>(true);
 
   useEffect(() => {
     useRefresh();
+    asyncStorage
+      .getItem('timetable')
+      .then(result => result && setTimetable(result));
   }, [initialValuesSet]);
 
   const useRefresh = (item?: 'color' | 'lang' | 'submit' | 'setup') => {
     if (!item || item === 'lang')
       asyncStorage
         .getItem('language')
-        .then(
-          result => (
-            result && setLanguage(result), console.log('language set:', result)
-          ),
-        );
+        .then(result => result && setLanguage(result));
     if (!item || item === 'color')
-      asyncStorage
-        .getItem('color')
-        .then(
-          result => (
-            result && setColor(result), console.log('color set:', result)
-          ),
-        );
+      asyncStorage.getItem('color').then(result => result && setColor(result));
     if (!item || item === 'submit')
       isInitialValuesSet().then(
         result => (
@@ -53,21 +52,31 @@ const App: React.FC = () => {
     <RefreshContext.Provider value={useRefresh}>
       <LanguageContext.Provider value={language}>
         <ThemeContext.Provider value={color}>
+          {/* <ShowFreeContext.Provider value={{showFree, setShowFree}}> */}
           <View className="flex-1 bg-[#121212]">
             {!loading ? (
               !initialValuesSet ? (
-                <SetupScreen isSetup={!initialValuesSet} />
+                <SetupScreen
+                  isSetup={!initialValuesSet}
+                  setTimetable={(timetable: any) => setTimetable(timetable)}
+                />
               ) : !setupOpen ? (
                 <GestureHandlerRootView className="flex-1 bg-inherit">
-                  <TimetableScreen />
+                  <TimetableContext.Provider value={timetable}>
+                    <TimetableScreen />
+                  </TimetableContext.Provider>
                 </GestureHandlerRootView>
               ) : (
-                <SetupScreen isSetup={!initialValuesSet} />
+                <SetupScreen
+                  isSetup={!initialValuesSet}
+                  setTimetable={(timetable: any) => setTimetable(timetable)}
+                />
               )
             ) : (
               <Loader />
             )}
           </View>
+          {/* </ShowFreeContext.Provider> */}
         </ThemeContext.Provider>
       </LanguageContext.Provider>
     </RefreshContext.Provider>
@@ -77,13 +86,8 @@ const App: React.FC = () => {
 export default App;
 
 //BEFORE RELEASE
-//[x] make date slider functional
-//[x] go to today on weekDay click
-//[x] add polish language
-//[x] make an app icon
 //TODO get the metarial ui colors
-//TODO add a splash screen
 //TODO add better alerts
 //TODO add readme
-//[x] add color picker on long press
+//TODO add custom theme for dropdown
 //FIXME fix a bug with date slider where it wont go to starting index on app launch

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {TextComponent, ViewComponent} from '../core';
 import {Subject} from '../../interfaces/timetable.interfaces';
@@ -47,11 +47,14 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.75} onPress={() => handleCardOpen()}>
-      <ViewComponent className="grow rounded-3xl justify-between px-5 py-4 mr-2">
+    <TouchableOpacity
+      className="shrink w-full"
+      activeOpacity={0.75}
+      onPress={() => handleCardOpen()}>
+      <ViewComponent className="rounded-3xl justify-between px-5 py-4 mr-2">
         <TextComponent
           numberOfLines={cardOpen[i] ? 4 : 1}
-          className="w-56 text-base leading-5 !text-black tracking-wider pb-2">
+          className="text-base leading-5 !text-black tracking-wider pb-2">
           {subjectMap[name] ? subjectMap[name] : name}
         </TextComponent>
         <View className="flex-row justify-between">

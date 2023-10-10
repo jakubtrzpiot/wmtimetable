@@ -8,7 +8,7 @@ interface Room {
 
 const RoomModule = ({room}: Room) => {
   return (
-    <View className="justify-center w-[12]">
+    <View className="justify-center grow w-[4%]">
       {[...room].map((letter, index) => (
         <TextComponent
           key={index}

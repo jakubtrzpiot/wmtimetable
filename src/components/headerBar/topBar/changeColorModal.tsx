@@ -32,18 +32,18 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
   } = props;
 
   const colors = [
-    '#F5D0C5',
-    '#F5C5D0',
-    '#D0F5C5',
-    '#C5F5D0',
-    '#C5D0F5',
-    '#D0C5F5',
-    '#F5E1C5',
-    '#F5C5E1',
-    '#C5F5E1',
-    '#E1F5C5',
-    '#E1C5F5',
-    '#C5E1F5',
+    '#f5d0c5',
+    '#f5c5d0',
+    '#d0f5c5',
+    '#c5f5d0',
+    '#c5d0f5',
+    '#d0c5f5',
+    '#f5e1c5',
+    '#f5c5e1',
+    '#c5f5e1',
+    '#e1f5c5',
+    '#e1c5f5',
+    '#c5e1f5',
   ].sort();
 
   return (
@@ -78,7 +78,7 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
               <LabeledTextInputComponent
                 label={en ? 'Enter color:' : 'Podaj kolor:'}
                 onChangeText={text => setUserColor(text)}
-                value={userColor.toLowerCase()}
+                value={userColor}
                 style={
                   /^#([0-9A-F]{3}){1,2}$/i.test(userColor)
                     ? {color: userColor, borderColor: userColor}

@@ -14,12 +14,24 @@ import {
   fetchTimetable,
   fetchCourseName,
 } from '../utils/helpers';
-import {LanguageContext, RefreshContext, ThemeContext} from '../utils/context';
+import {
+  LanguageContext,
+  RefreshContext,
+  // ShowFreeContext,
+  ThemeContext,
+} from '../utils/context';
 import asyncStorage from '../utils/asyncStorage';
 
-const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
+const SetupScreen = ({
+  isSetup,
+  setTimetable,
+}: {
+  isSetup: boolean;
+  setTimetable: any;
+}) => {
   //TODO refactor this mess
   const [course, setCourse] = useState<string>('');
+  const [previousGroups, setPreviousGroups] = useState<string[]>([]);
   const [previousCourse, setPreviousCourse] = useState<string>('');
   const [lab, onChangeLab] = useState<string>('');
   const [computerLab, onChangeComputerLab] = useState<string>('');
@@ -35,6 +47,12 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
   const en = language === 'en';
 
   const color = useContext(ThemeContext);
+
+  // const {showFree, setShowFree} = useContext(ShowFreeContext);
+
+  // const handleShowFree = () => {
+  //   setShowFree(!showFree);
+  // };
 
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
@@ -73,24 +91,27 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
 
     asyncStorage
       .getItem('groups')
-      .then(data =>
-        data?.map((group: string) => {
-          if (group === 'all') return;
-          switch (group[0]) {
-            case 'l':
-              onChangeLab(group.slice(1));
-              break;
-            case 'k':
-              onChangeComputerLab(group.slice(1));
-              break;
-            case 'p':
-              onChangeProject(group.slice(1));
-              break;
-            default:
-              onChangeEnglish(group);
-              break;
-          }
-        }),
+      .then(
+        data => (
+          setPreviousGroups(data),
+          data?.map((group: string) => {
+            if (group === 'all') return;
+            switch (group[0]) {
+              case 'l':
+                onChangeLab(group.slice(1));
+                break;
+              case 'k':
+                onChangeComputerLab(group.slice(1));
+                break;
+              case 'p':
+                onChangeProject(group.slice(1));
+                break;
+              default:
+                onChangeEnglish(group);
+                break;
+            }
+          })
+        ),
       )
       .catch(err => console.log(err));
   }, []);
@@ -131,12 +152,15 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
           'all',
         ]),
         setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>
-          fetchTimetable(
-            !(course === previousCourse),
-            // ||  !(toggleClicks % 2 === 0),
-          ).then(
+          // asyncStorage.setItem('showFree', showFree.toString()),
+          fetchTimetable(true).then(
             () => (
-              useRefresh('submit'), useRefresh('lang'), setModalOpen(false)
+              useRefresh('submit'),
+              useRefresh('lang'),
+              setModalOpen(false),
+              asyncStorage
+                .getItem('timetable')
+                .then(result => setTimetable(result))
             ),
           ),
         ))
@@ -172,10 +196,10 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
       visible={modalOpen}
       onRequestClose={() => !isSetup && handleBack()}>
       {(!loading && (
-        <View className="flex-1 justify-center px-4 bg-[#121212]">
+        <View className="flex-1 justify-start px-4 bg-[#121212]">
           <Image
             source={require('../components/core/appIcon.png')}
-            className="h-20 w-[168] self-center mb-16"
+            className="h-16 w-[154] self-center my-16"
             style={[{tintColor: color}]}
           />
           {/* <LabeledTextInputComponent
@@ -275,10 +299,20 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
               onValueChange={() => handleLanguageChange()}
             />
           </LabeledComponent> */}
+          {/* 
+          <LabeledComponent
+            label={en ? 'Show free periods:' : 'Wyświetlaj okienka:'}>
+            <SwitchComponent
+              left="Wył"
+              right="Wł"
+              value={showFree}
+              onValueChange={() => handleShowFree()}
+            />
+          </LabeledComponent> */}
 
           <ButtonComponent
             full
-            className="mt-4"
+            className="mt-8"
             onPress={() => handleSubmit()}
             text={en ? 'Save' : 'Zapisz'}></ButtonComponent>
         </View>

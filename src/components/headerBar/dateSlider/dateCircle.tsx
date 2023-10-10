@@ -4,7 +4,7 @@ import {TextComponent, ViewComponent} from '../../core';
 import {getDay} from '../../../utils/helpers';
 import {DateContext, LanguageContext} from '../../../utils/context';
 
-const DateCircle = ({date, i}: {date: Date; i: number}) => {
+const DateCircle = ({date, i, days}: {date: Date; i: number; days: number}) => {
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
   const day = getDay(date);
@@ -15,7 +15,7 @@ const DateCircle = ({date, i}: {date: Date; i: number}) => {
     })
     .slice(0, 1)
     .toUpperCase();
-  const moreSpace = !(i === -14 || i === 14) && day === 0;
+  const moreSpace = !(i === -days || i === days + 1) && day === 0;
 
   const {setDate} = useContext(DateContext);
   return (
@@ -38,5 +38,7 @@ const DateCircle = ({date, i}: {date: Date; i: number}) => {
     </TouchableOpacity>
   );
 };
+
+
 
 export default DateCircle;

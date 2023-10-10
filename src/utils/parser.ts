@@ -1,6 +1,7 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from './constants';
 import {Timetable, Subject} from '../interfaces/timetable.interfaces';
+import {filter} from './helpers';
 import asyncStorage from './asyncStorage';
 
 const transpose = (array: Array<any>) => {
@@ -33,11 +34,13 @@ const unwrap = (node: any) => {
             .split('-')[1]
             .trim()
             .replace(/[()]/g, '')
+            .replace('.', '')
             .toLowerCase()[0];
         } catch (err) {
           week = subject.nextSibling.nodeValue
             .trim()
             .replace(/[()\-0-9]/g, '')
+            .replace('.', '')
             .toLowerCase();
         }
 
@@ -66,7 +69,9 @@ const unwrap = (node: any) => {
             ? subject.nextSibling.nextSibling.firstChild.nodeValue
                 .replace('#', '')
                 .toLowerCase()
-            : 'all';
+            : ['ć', 'w'].includes(type)
+            ? 'all'
+            : null;
 
         let room = node
           .getElementsByAttribute('class', 's')
@@ -92,7 +97,7 @@ const unwrap = (node: any) => {
 };
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
-  const lang = await asyncStorage.getItem('language');
+  const groups = await asyncStorage.getItem('groups');
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
@@ -118,7 +123,7 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         return {start: hour[0], end: hour[1]};
       });
 
-      const timetable = transposed.slice(1).map((day: any) => {
+      let timetable = transposed.slice(1).map((day: any) => {
         return day.map((lesson: any, i: number) => {
           const time = hours[i];
           return {
@@ -128,8 +133,9 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         });
       });
 
-      // console.log('timetable:', timetable);
-      return timetable as Timetable;
+      timetable = filter(timetable, groups);
+
+      return timetable;
     })
     .catch(err => err && console.error(err, 'parseTimetable'));
 };

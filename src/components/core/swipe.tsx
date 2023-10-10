@@ -23,7 +23,7 @@ const SwipeComponent = ({
 }: SwipeComponentProps) => {
   const [didFire, setDidFire] = useState<boolean>(false);
   const [dir, setDir] = useState<Dir>();
-  const swipeRange: number = 100;
+  const swipeRange: number = 50;
 
   const onGestureEvent = ({nativeEvent}: Event) => {
     const {translationX, translationY} = nativeEvent;
