@@ -41,15 +41,6 @@ const dateSlider = ({date}: DateSliderProps) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         ref={flatListRef}
-        // ListFooterComponent={() => <View className="w-2" />}
-        // ListHeaderComponent={() => <View className="w-2" />}
-        getItemLayout={(data, index) => {
-          return {
-            length: 32,
-            offset: (32 + 4) * index - 4,
-            index,
-          };
-        }}
       />
       <Month date={date} />
     </>

@@ -32,19 +32,27 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
   } = props;
 
   const colors = [
-    '#f5d0c5',
-    '#f5c5d0',
-    '#d0f5c5',
-    '#c5f5d0',
-    '#c5d0f5',
-    '#d0c5f5',
-    '#f5e1c5',
-    '#f5c5e1',
-    '#c5f5e1',
-    '#e1f5c5',
-    '#e1c5f5',
     '#c5e1f5',
-  ].sort();
+    ...[
+      '#f5d0c5',
+      '#f5c5d0',
+      '#d0f5c5',
+      '#c5f5d0',
+      '#c5d0f5',
+      '#d0c5f5',
+      '#f5e1c5',
+      '#f5c5e1',
+      '#c5f5e1',
+      '#e1f5c5',
+      '#e1c5f5',
+      '#f5c5c5',
+      '#c5f5c5',
+      '#c5c5f5',
+      '#f5f5c5',
+      '#f5c5f5',
+      '#c5f5f5',
+    ].sort(),
+  ];
 
   return (
     <Modal

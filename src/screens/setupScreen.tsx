@@ -57,9 +57,9 @@ const SetupScreen = ({
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
   const [courseItems, setCourseItems] = useState([
-    {label: '11A1', value: '22'},
-    {label: '11A2', value: '23'},
-    {label: '11A3', value: '24'},
+    {label: '12A1', value: '22'},
+    {label: '12A2', value: '23'},
+    {label: '12A3', value: '24'},
   ]);
 
   const [englishOpen, setEnglishOpen] = useState(false);
@@ -299,8 +299,8 @@ const SetupScreen = ({
               onValueChange={() => handleLanguageChange()}
             />
           </LabeledComponent> */}
-          {/* 
-          <LabeledComponent
+
+          {/* <LabeledComponent
             label={en ? 'Show free periods:' : 'Wyświetlaj okienka:'}>
             <SwitchComponent
               left="Wył"

@@ -39,6 +39,4 @@ const DateCircle = ({date, i, days}: {date: Date; i: number; days: number}) => {
   );
 };
 
-
-
 export default DateCircle;
