@@ -3,6 +3,7 @@ import {FlatList, View} from 'react-native';
 import {range, addDays} from '../../../utils/helpers';
 import DateCircle from './dateCircle';
 import Month from './month';
+import {Dimensions} from 'react-native';
 
 interface DateSliderProps {
   date: Date;
@@ -19,10 +20,10 @@ const dateSlider = ({date}: DateSliderProps) => {
 
   useEffect(() => {
     const scrollToCenter = () => {
-      flatListRef?.current?.scrollToIndex({
-        index: days + 1,
+      const {width} = Dimensions.get('window');
+      flatListRef?.current?.scrollToOffset({
+        offset: (32 + 4) * (days + 1) - 4 + 32 / 2 - width / 2,
         animated: true,
-        viewPosition: 0.5,
       });
     };
 
