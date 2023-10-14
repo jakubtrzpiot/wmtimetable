@@ -14,12 +14,7 @@ import {
   fetchTimetable,
   fetchCourseName,
 } from '../utils/helpers';
-import {
-  LanguageContext,
-  RefreshContext,
-  // ShowFreeContext,
-  ThemeContext,
-} from '../utils/context';
+import {LanguageContext, RefreshContext, ThemeContext} from '../utils/context';
 import asyncStorage from '../utils/asyncStorage';
 
 const SetupScreen = ({
@@ -47,12 +42,6 @@ const SetupScreen = ({
   const en = language === 'en';
 
   const color = useContext(ThemeContext);
-
-  // const {showFree, setShowFree} = useContext(ShowFreeContext);
-
-  // const handleShowFree = () => {
-  //   setShowFree(!showFree);
-  // };
 
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
@@ -297,16 +286,6 @@ const SetupScreen = ({
               right="EN"
               value={en}
               onValueChange={() => handleLanguageChange()}
-            />
-          </LabeledComponent> */}
-
-          {/* <LabeledComponent
-            label={en ? 'Show free periods:' : 'Wyświetlaj okienka:'}>
-            <SwitchComponent
-              left="Wył"
-              right="Wł"
-              value={showFree}
-              onValueChange={() => handleShowFree()}
             />
           </LabeledComponent> */}
 

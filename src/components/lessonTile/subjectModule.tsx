@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, TouchableOpacity} from 'react-native';
-import {TextComponent, ViewComponent} from '../core';
+import {TextComponent, ViewComponent, IconComponent} from '../core';
 import {Subject} from '../../interfaces/timetable.interfaces';
 import subjectMap from '../../utils/subjectMap';
 import {LanguageContext, CardOpenContext} from '../../utils/context';
@@ -11,6 +11,7 @@ interface SubjectModuleProps extends Subject {
 
 const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
   const {cardOpen, setCardOpen} = useContext(CardOpenContext);
+  const [lines, setLines] = useState(1);
 
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
@@ -34,7 +35,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
       type = en ? 'project' : 'projekt';
       break;
     case 'k':
-      type = en ? 'computer lab' : 'pracownia komputerowa';
+      type = en ? 'pc lab' : 'komputery';
       break;
     default:
   }
@@ -48,23 +49,45 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
 
   return (
     <TouchableOpacity
-      className="shrink w-full"
+      className="flex-row flex-1 mr-2"
       activeOpacity={0.75}
       onPress={() => handleCardOpen()}>
-      <ViewComponent className="rounded-3xl justify-between px-5 py-4 mr-2">
-        <TextComponent
-          numberOfLines={cardOpen[i] ? 4 : 1}
-          className="text-base leading-5 !text-black tracking-wider pb-2">
-          {subjectMap[name] ? subjectMap[name] : name}
-        </TextComponent>
-        <View className="flex-row justify-between">
-          <TextComponent className="!text-black text-xs tracking-wide">
-            {teacher}
-          </TextComponent>
-          <TextComponent className="!text-black leading-4 tracking-wide">
-            {type}
-          </TextComponent>
+      <ViewComponent
+        className={`flex-row flex-1 rounded-3xl justify-between ${
+          cardOpen[i] ? 'pl-5' : 'px-5'
+        }`}>
+        <View className="flex-1 py-4">
+          <View className="flex-row">
+            <TextComponent
+              onTextLayout={({nativeEvent}) =>
+                setLines(nativeEvent.lines.length)
+              }
+              numberOfLines={cardOpen[i] ? 4 : 1}
+              className="flex-1 text-base leading-5 !text-black tracking-wider pb-2">
+              {subjectMap[name] ? subjectMap[name] : name}
+            </TextComponent>
+          </View>
+          <View className="flex-row justify-between">
+            <TextComponent className="!text-black text-xs tracking-wide">
+              {teacher}
+            </TextComponent>
+            <TextComponent className="!text-black leading-4 tracking-wide">
+              {type}
+            </TextComponent>
+          </View>
         </View>
+        {cardOpen[i] && (
+          <View className="h-full flex-row items-center">
+            <IconComponent
+              center
+              activeOpacity={0.5}
+              className="h-full px-4"
+              name="note-edit"
+              size={24}
+              customColor="black"
+            />
+          </View>
+        )}
       </ViewComponent>
     </TouchableOpacity>
   );

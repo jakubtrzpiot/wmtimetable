@@ -95,7 +95,7 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
                 maxLength={7}
               />
               <IconComponent
-                className="-mb-4 p-2"
+                className="p-2"
                 name="dice-multiple"
                 size={32}
                 onPress={() => randomizeColor()}
