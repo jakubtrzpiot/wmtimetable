@@ -40,6 +40,11 @@ const dateSlider = ({date}: DateSliderProps) => {
         ItemSeparatorComponent={() => <View className="w-1" />}
         horizontal
         showsHorizontalScrollIndicator={false}
+        getItemLayout={(data, index) => ({
+          length: 32 + 4,
+          offset: (32 + 4) * index,
+          index,
+        })}
         ref={flatListRef}
       />
       <Month date={date} />

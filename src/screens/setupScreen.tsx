@@ -125,26 +125,27 @@ const SetupScreen = ({
   };
 
   const handleSubmit = () => {
+    const rawGroups = [lab, computerLab, project].map((el: string) =>
+      el.length === 1 ? '0' + el : el,
+    );
+    console.log(rawGroups);
     let groups: string[] = [];
+
     !(course && lab && computerLab && project && english)
       ? (console.log('not all values set'), showAlert('Błąd', 'Sprawdź dane'))
       : parseInt(course) >= 1 &&
-        parseInt(lab) >= 1 &&
-        parseInt(lab) <= 6 &&
-        parseInt(computerLab) >= 1 &&
-        parseInt(computerLab) <= 5 &&
-        parseInt(project) >= 1 &&
-        (parseInt(project) <= 5 || parseInt(project) === 7) &&
+        rawGroups.every(
+          group => parseInt(group) >= 1 && parseInt(group) <= 7,
+        ) &&
         /^[a-zA-Z]{2}\d?$/.test(english)
       ? ((groups = [
-          `l${lab}`,
-          `k${computerLab}`,
-          `p${project}`,
+          `l${rawGroups[0]}`,
+          `k${rawGroups[1]}`,
+          `p${rawGroups[2]}`,
           english,
           'all',
         ]),
         setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>
-          // asyncStorage.setItem('showFree', showFree.toString()),
           fetchTimetable(true).then(
             () => (
               useRefresh('submit'),
