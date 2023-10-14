@@ -30,13 +30,3 @@ export const CardOpenContext = createContext<CardOpenContextType>({
 });
 
 export const TimetableContext = createContext<Timetable>([]);
-
-// interface ShowFreeContextType {
-//   showFree: boolean;
-//   setShowFree: Dispatch<SetStateAction<boolean>>;
-// }
-
-// export const ShowFreeContext = createContext<ShowFreeContextType>({
-//   showFree: false,
-//   setShowFree: () => {},
-// });

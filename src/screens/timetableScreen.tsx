@@ -11,7 +11,6 @@ import {
   ThemeContext,
   CardOpenContext,
   TimetableContext,
-  // ShowFreeContext,
 } from '../utils/context';
 import {Day} from '../interfaces/timetable.interfaces';
 
@@ -23,8 +22,6 @@ const TimetableScreen = () => {
   const [week, setWeek] = useState<string>('');
   const [cardOpen, setCardOpen] = useState<Array<boolean>>([]);
   const colorHex = useContext(ThemeContext);
-
-  // const {showFree} = useContext(ShowFreeContext);
 
   useEffect(() => {
     const day = getDay(date);

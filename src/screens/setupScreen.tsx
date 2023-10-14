@@ -36,7 +36,6 @@ const SetupScreen = ({
   const useRefresh = useContext(RefreshContext);
   const [courseName, setCourseName] = useState<string>('No course');
   const [lang, setLanguage] = useState<string>('en');
-  // const [toggleClicks, setToggleClicks] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [setupModalOpen, setSetupModalOpen] = useState<boolean>(true);
   const language = useContext(LanguageContext);
@@ -177,12 +176,6 @@ const SetupScreen = ({
           )
       : setCourseName((invert ? !en : en) ? 'No course' : 'Brak kierunku');
   };
-
-  // const handleLanguageChange = () => {
-  //   setLanguage(en ? 'pl' : 'en');
-  //   setToggleClicks(toggleClicks + 1);
-  //   onChangeCourse(course, true);
-  // };
 
   return (
     <Modal

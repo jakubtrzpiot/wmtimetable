@@ -10,7 +10,6 @@ import {
   LanguageContext,
   RefreshContext,
   TimetableContext,
-  // ShowFreeContext,
 } from './src/utils/context';
 import asyncStorage from './src/utils/asyncStorage';
 import {Timetable} from './src/interfaces/timetable.interfaces';
@@ -22,8 +21,6 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [setupOpen, setSetupOpen] = useState(false);
   const [timetable, setTimetable] = useState<Timetable>([]);
-
-  // const [showFree, setShowFree] = useState<boolean>(true);
 
   useEffect(() => {
     useRefresh();
@@ -52,7 +49,6 @@ const App: React.FC = () => {
     <RefreshContext.Provider value={useRefresh}>
       <LanguageContext.Provider value={language}>
         <ThemeContext.Provider value={color}>
-          {/* <ShowFreeContext.Provider value={{showFree, setShowFree}}> */}
           <View className="flex-1 bg-[#121212]">
             {!loading ? (
               !initialValuesSet ? (
@@ -76,7 +72,6 @@ const App: React.FC = () => {
               <Loader />
             )}
           </View>
-          {/* </ShowFreeContext.Provider> */}
         </ThemeContext.Provider>
       </LanguageContext.Provider>
     </RefreshContext.Provider>
