@@ -1,36 +1,31 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {Modal, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Alert} from 'react-native';
 import {
   LabeledTextInputComponent,
   ButtonComponent,
   IconComponent,
-} from '../../core';
-import ColorTile from './colorTile';
+} from '../core';
+import asyncStorage from '../../utils/asyncStorage';
+import {
+  LanguageContext,
+  RefreshContext,
+  ThemeContext,
+} from '../../utils/context';
+import ColorTile from '../headerBar/topBar/colorTile';
 
 interface ChangeColorModalProps {
-  en: boolean;
   modalOpen: boolean;
-  closeModal: () => void;
-  colorHex: string;
-  handleColorChange: (color: string) => void;
-  userColor: string;
-  setUserColor: (color: string) => void;
-  randomizeColor: () => void;
+  setModalOpen: (open: boolean) => void;
 }
 
 const ChangeColorModal = (props: ChangeColorModalProps) => {
-  const {
-    en,
-    modalOpen,
-    closeModal,
-    colorHex,
-    handleColorChange,
-    userColor,
-    setUserColor,
-    randomizeColor,
-  } = props;
+  const {modalOpen, setModalOpen} = props;
+  const lang = useContext(LanguageContext);
+  const en = lang === 'en';
 
+  const colorHex = useContext(ThemeContext);
+  const [userColor, setUserColor] = useState<string>(colorHex);
   const colors = [
     '#c5e1f5',
     ...[
@@ -53,6 +48,47 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
       '#c5f5f5',
     ].sort(),
   ];
+
+  const useRefresh = useContext(RefreshContext);
+
+  const getRgb = () => Math.floor(Math.random() * 256);
+
+  const rgbToHex = (r: number, g: number, b: number) =>
+    '#' +
+    [r, g, b]
+      .map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      })
+      .join('');
+
+  const randomizeColor = () => {
+    const color = {
+      r: getRgb(),
+      g: getRgb(),
+      b: getRgb(),
+    };
+
+    const hex = rgbToHex(color.r, color.g, color.b);
+    setUserColor(hex);
+  };
+
+  const handleColorChange = (hex: string) => {
+    hex !== colorHex
+      ? /^#([0-9A-F]{3}){1,2}$/i.test(hex)
+        ? asyncStorage
+            .setItem('color', hex)
+            .then(() => (useRefresh('color'), setModalOpen(false)))
+        : Alert.alert(
+            en ? 'Invalid color' : 'Niepoprawny kolor',
+            en
+              ? 'Please enter a valid hex color'
+              : 'Proszę podać poprawny kolor hex',
+          )
+      : setModalOpen(false);
+  };
+
+  const closeModal = () => (setModalOpen(false), setUserColor(colorHex));
 
   return (
     <Modal
@@ -86,7 +122,7 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
               <LabeledTextInputComponent
                 label={en ? 'Enter color:' : 'Podaj kolor:'}
                 onChangeText={text => setUserColor(text)}
-                value={userColor}
+                value={userColor.toUpperCase()}
                 style={
                   /^#([0-9A-F]{3}){1,2}$/i.test(userColor)
                     ? {color: userColor, borderColor: userColor}

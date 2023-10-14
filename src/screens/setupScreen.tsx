@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {View, Alert, Modal, Image} from 'react-native';
 import {
-  TextComponent,
+  IconComponent,
   LabeledComponent,
   LabeledTextInputComponent,
   SwitchComponent,
@@ -9,6 +9,7 @@ import {
   ButtonComponent,
   PickerComponent,
 } from '../components/core';
+import ChangeColorModal from '../components/modals/changeColorModal';
 import {
   setInitialValues,
   fetchTimetable,
@@ -37,7 +38,7 @@ const SetupScreen = ({
   const [lang, setLanguage] = useState<string>('en');
   // const [toggleClicks, setToggleClicks] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [modalOpen, setModalOpen] = useState<boolean>(true);
+  const [setupModalOpen, setSetupModalOpen] = useState<boolean>(true);
   const language = useContext(LanguageContext);
   const en = language === 'en';
 
@@ -59,6 +60,8 @@ const SetupScreen = ({
     {label: 'WG1', value: 'wg1'},
     {label: 'WG7', value: 'wg7'},
   ]);
+
+  const [colorModalOpen, setColorModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     asyncStorage.getItem('language').then(data => {
@@ -146,7 +149,8 @@ const SetupScreen = ({
             () => (
               useRefresh('submit'),
               useRefresh('lang'),
-              setModalOpen(false),
+              setSetupModalOpen(false),
+              setColorModalOpen(false),
               asyncStorage
                 .getItem('timetable')
                 .then(result => setTimetable(result))
@@ -157,7 +161,8 @@ const SetupScreen = ({
   };
 
   const handleBack = () => {
-    setModalOpen(false);
+    setSetupModalOpen(false);
+    setColorModalOpen(false);
     useRefresh('setup');
   };
 
@@ -182,7 +187,7 @@ const SetupScreen = ({
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalOpen}
+      visible={setupModalOpen}
       onRequestClose={() => !isSetup && handleBack()}>
       {(!loading && (
         <View className="flex-1 justify-start px-4 bg-[#121212]">
@@ -191,18 +196,6 @@ const SetupScreen = ({
             className="h-16 w-[154] self-center my-16"
             style={[{tintColor: color}]}
           />
-          {/* <LabeledTextInputComponent
-            underline
-            label={en ? 'Enter your course number:' : 'Wpisz numer planu:'}
-            inputMode="numeric"
-            maxLength={2}
-            onChangeText={text => onChangeCourse(text)}
-            value={course}
-          />
-
-          <TextComponent className="mb-4">{`${
-            en ? 'Selected course:' : 'Wybrany kierunek:'
-          } ${courseName}`}</TextComponent> */}
           <LabeledComponent
             className="mb-7"
             label={en ? 'Select a course:' : 'Wybierz kierunek:'}>
@@ -219,7 +212,6 @@ const SetupScreen = ({
               onOpen={() => setEnglishOpen(false)}
             />
           </LabeledComponent>
-
           <LabeledComponent
             className="mb-5"
             label={en ? 'English group:' : 'Grupa językowa:'}>
@@ -235,7 +227,6 @@ const SetupScreen = ({
               onOpen={() => setCourseOpen(false)}
             />
           </LabeledComponent>
-
           <LabeledTextInputComponent
             underline
             className="mb-4"
@@ -245,7 +236,6 @@ const SetupScreen = ({
             onChangeText={text => onChangeLab(text)}
             value={lab}
           />
-
           <LabeledTextInputComponent
             underline
             className="mb-4"
@@ -257,7 +247,6 @@ const SetupScreen = ({
             onChangeText={text => onChangeComputerLab(text)}
             value={computerLab}
           />
-
           <LabeledTextInputComponent
             underline
             className="mb-4"
@@ -267,31 +256,22 @@ const SetupScreen = ({
             onChangeText={text => onChangeProject(text)}
             value={project}
           />
-          {/* 
-          <LabeledTextInputComponent
-            underline
-            className="mb-2"
-            label={en ? 'English group:' : 'Grupa językowa:'}
-            inputMode="text"
-            maxLength={3}
-            onChangeText={text => onChangeEnglish(text)}
-            value={english}
-          /> */}
-
-          {/* <LabeledComponent
-
-            label={en ? 'Language:' : 'Język:'}>
-            <SwitchComponent
-              left="PL"
-              right="EN"
-              value={en}
-              onValueChange={() => handleLanguageChange()}
+          <LabeledComponent className="" label="Zmień kolor:">
+            <IconComponent
+              name="palette"
+              size={24}
+              label={color.toUpperCase()}
+              onPress={() => setColorModalOpen(true)}
             />
-          </LabeledComponent> */}
+          </LabeledComponent>
+          <ChangeColorModal
+            modalOpen={colorModalOpen}
+            setModalOpen={setColorModalOpen}
+          />
 
           <ButtonComponent
             full
-            className="mt-8"
+            className="mt-10"
             onPress={() => handleSubmit()}
             text={en ? 'Save' : 'Zapisz'}></ButtonComponent>
         </View>

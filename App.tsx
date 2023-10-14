@@ -90,4 +90,7 @@ export default App;
 //TODO add better alerts
 //TODO add readme
 //TODO add custom theme for dropdown
-//FIXME fix a bug with date slider where it wont go to starting index on app launch
+//TODO add insertLesson, deleteLesson, addNote, deleteNote
+//TODO add note indicator
+//TODO add notes screen
+//TODO add current time as a line across the timetable

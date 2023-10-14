@@ -82,7 +82,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
               center
               activeOpacity={0.5}
               className="h-full px-4"
-              name="note-edit"
+              name="notebook-edit"
               size={24}
               customColor="black"
             />
