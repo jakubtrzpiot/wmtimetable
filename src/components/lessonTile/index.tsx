@@ -16,7 +16,7 @@ const LessonTile = ({time, subject, i}: LessonTileProps) => {
 
   subject = subject as Subject;
   return (
-    <View className={`flex-row ${cardOpen[i] ? 'min-h-[72]' : 'h-[72]'}`}>
+    <View className={`flex-row ${cardOpen[i] ? 'min-h-[70]' : 'h-[70]'}`}>
       <TimeModule {...time} />
       {subject ? (
         <>

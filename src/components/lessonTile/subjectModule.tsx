@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {TextComponent, ViewComponent, IconComponent} from '../core';
 import {Subject} from '../../interfaces/timetable.interfaces';
@@ -11,7 +11,6 @@ interface SubjectModuleProps extends Subject {
 
 const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
   const {cardOpen, setCardOpen} = useContext(CardOpenContext);
-  const [lines, setLines] = useState(1);
 
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
@@ -54,24 +53,21 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
       onPress={() => handleCardOpen()}>
       <ViewComponent
         className={`flex-row flex-1 rounded-3xl justify-between ${
-          cardOpen[i] ? 'pl-5' : 'px-5'
+          cardOpen[i] ? 'pl-4' : 'px-4'
         }`}>
-        <View className="flex-1 py-4">
+        <View className="flex-1 py-4 justify-between">
           <View className="flex-row">
             <TextComponent
-              onTextLayout={({nativeEvent}) =>
-                setLines(nativeEvent.lines.length)
-              }
               numberOfLines={cardOpen[i] ? 4 : 1}
-              className="flex-1 text-base leading-5 !text-black tracking-wider pb-2">
+              className="flex-1 text-base leading-5 !text-[#121212] tracking-wider pb-1.5">
               {subjectMap[name] ? subjectMap[name] : name}
             </TextComponent>
           </View>
           <View className="flex-row justify-between">
-            <TextComponent className="!text-black text-xs tracking-wide">
+            <TextComponent className="!text-[#121212] text-xs tracking-wide">
               {teacher.toUpperCase()}
             </TextComponent>
-            <TextComponent className="!text-black leading-4 tracking-wide">
+            <TextComponent className="!text-[#121212] leading-4 tracking-wide">
               {type}
             </TextComponent>
           </View>

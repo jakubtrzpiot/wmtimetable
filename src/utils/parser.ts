@@ -181,8 +181,6 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         };
       }
 
-      console.log(timetable);
-
       const insertLessons = ({lessonIndex, dayIndex, subject}: LessonProps) => {
         for (let idx of lessonIndex as number[]) {
           timetable[dayIndex][idx].subject.push(subject);

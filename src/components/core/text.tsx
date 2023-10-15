@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {Text, TextProps, StyleSheet} from 'react-native';
-import classNames from 'classnames';
 import {ThemeContext} from '../../utils/context';
 
 const TextComponent = (props: TextProps) => {

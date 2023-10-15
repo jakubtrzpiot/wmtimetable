@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {
   View,
+  Text,
   TouchableOpacity,
   TouchableOpacityProps,
   StyleSheet,
@@ -18,6 +19,7 @@ interface IconComponentProps extends TouchableOpacityProps {
   center?: boolean;
   disabled?: boolean;
   activeOpacity?: number;
+  indicator?: number;
 }
 
 const IconComponent = (props: IconComponentProps) => {
@@ -35,9 +37,20 @@ const IconComponent = (props: IconComponentProps) => {
       activeOpacity={props?.activeOpacity}
       style={StyleSheet.flatten([
         props?.style,
-        props.center ? {paddingTop: props.size / 2} : {},
+        props.center
+          ? {paddingBottom: -props.size / 2, paddingTop: props.size / 2}
+          : {},
       ])}>
       <View className="flex-col items-center justify-center">
+        {props?.indicator && (
+          <View
+            className="absolute -top-1.5 -right-2 w-4 h-4 items-center justify-center rounded-full z-50"
+            style={{backgroundColor: color}}>
+            <Text className="font-lexend-semibold text-xs text-[#121212]">
+              {props.indicator}
+            </Text>
+          </View>
+        )}
         <Icon
           name={props?.name}
           size={props?.size}

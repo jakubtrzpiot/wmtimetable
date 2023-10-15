@@ -10,7 +10,7 @@ const WeekType = ({weekType}: WeekType) => {
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
   return (
-    <TextComponent className="-mt-1 ml-1">
+    <TextComponent className="-mt-1">
       {(weekType === 'p'
         ? en
           ? 'even'
