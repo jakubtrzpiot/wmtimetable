@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import {fetchTimetable, getDay, addDays, getWeekType} from '../utils/helpers';
@@ -34,6 +34,8 @@ const TimetableScreen = () => {
       setCardOpen(
         timetable[day] ? new Array(timetable[day]?.length).fill(false) : [],
       ));
+
+    flatListRef.current?.scrollToOffset({animated: false, offset: 0});
   }, [date, timetable, loading]);
 
   const handleSwipe = (dir: string) => {
@@ -52,6 +54,8 @@ const TimetableScreen = () => {
     fetchTimetable(true).then(() => setLoading(false));
   };
 
+  const flatListRef = useRef<FlatList>(null);
+
   return week && date ? (
     <>
       <DateContext.Provider value={{date, setDate}}>
@@ -63,11 +67,12 @@ const TimetableScreen = () => {
             <CardOpenContext.Provider value={{cardOpen, setCardOpen}}>
               <FlatList
                 className="min-h-full px-4"
-                showsVerticalScrollIndicator={true}
+                showsVerticalScrollIndicator={false}
                 data={today}
                 renderItem={({item, index}) => (
                   <LessonTile i={index} {...item} />
                 )}
+                ref={flatListRef}
                 ItemSeparatorComponent={() => <View className="h-4" />}
                 ListEmptyComponent={() => <Empty />}
                 ListHeaderComponent={() => <View className="h-3" />}
