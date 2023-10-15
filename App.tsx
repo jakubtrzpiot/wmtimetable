@@ -81,11 +81,15 @@ const App: React.FC = () => {
 export default App;
 
 //BEFORE RELEASE
-//TODO get the metarial ui colors
-//TODO add better alerts
-//TODO add readme
-//TODO add custom theme for dropdown
 //TODO add insertLesson, deleteLesson, addNote, deleteNote
-//TODO add note indicator
 //TODO add notes screen
+//TODO add note indicator
 //TODO add current time as a line across the timetable
+//TODO add custom theme for dropdown
+//TODO add animations
+//TODO add better alerts
+//TODO add splash screen instead of loader on initial load
+//TODO maybe add smooth transitions between screens
+//TODO get the metarial ui colors
+//TODO add readme
+//FIXME on day change reset the scroll position

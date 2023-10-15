@@ -69,7 +69,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
           </View>
           <View className="flex-row justify-between">
             <TextComponent className="!text-black text-xs tracking-wide">
-              {teacher}
+              {teacher.toUpperCase()}
             </TextComponent>
             <TextComponent className="!text-black leading-4 tracking-wide">
               {type}

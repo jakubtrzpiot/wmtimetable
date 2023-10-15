@@ -1,5 +1,5 @@
 export type Timetable = Day[];
-export type Day = Lesson[] | null;
+export type Day = Lesson[];
 
 export interface Lesson {
   time: Time;

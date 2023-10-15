@@ -34,7 +34,7 @@ const TimetableScreen = () => {
       setCardOpen(
         timetable[day] ? new Array(timetable[day]?.length).fill(false) : [],
       ));
-  }, [date, timetable]);
+  }, [date, timetable, loading]);
 
   const handleSwipe = (dir: string) => {
     switch (dir) {

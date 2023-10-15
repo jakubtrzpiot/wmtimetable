@@ -27,20 +27,6 @@ export const getWeekType = (date: Date): string => {
   return weekNumber % 2 ? 'p' : 'n';
 };
 
-export const stripNullValuesFromEdges = (array: Array<any>) => {
-  // Remove null values from the beginning of the array
-  while (array.length > 0 && array[0].subject === null) {
-    array.shift();
-  }
-
-  // Remove null values from the end of the array
-  while (array.length > 0 && array[array.length - 1].subject === null) {
-    array.pop();
-  }
-
-  return array;
-};
-
 //genereate array of numbers from start to stop with step
 export const range = (start: number, stop?: number, step?: number) => {
   !stop ? ((stop = start), (start = 0)) : null;
@@ -128,28 +114,6 @@ export const fetchTimetable = async (refresh: boolean = false) => {
   } catch (err) {
     console.error(err, 'in fetchTimetable');
   }
-};
-
-export const filter = (timetable: Timetable, groups: Array<string>) => {
-  const byWeek = (week: string) =>
-    timetable.map(
-      day =>
-        day &&
-        stripNullValuesFromEdges(
-          day.map(({time, subject}: Lesson) => ({
-            time,
-            subject:
-              (subject as Subject[])?.filter(
-                subject =>
-                  groups.includes(subject.group) && subject.week === week,
-              )[0] || null,
-          })),
-        ),
-    );
-
-  const result = [...byWeek('n'), [], [], ...byWeek('p'), [], []];
-  // console.log(result);
-  return result;
 };
 
 export const fetchCourseName = async (course: number) => {

@@ -127,7 +127,6 @@ const SetupScreen = ({
     const rawGroups = [lab, computerLab, project].map((el: string) =>
       el.length === 1 ? '0' + el : el,
     );
-    console.log(rawGroups);
     let groups: string[] = [];
 
     !(course && lab && computerLab && project && english)
