@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   StyleSheet,
+  PixelRatio,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TextComponent from './text';
@@ -24,6 +25,7 @@ interface IconComponentProps extends TouchableOpacityProps {
 
 const IconComponent = (props: IconComponentProps) => {
   const color = useContext(ThemeContext);
+  const pixelRatio = PixelRatio.getFontScale();
 
   return (
     <TouchableOpacity
@@ -46,7 +48,9 @@ const IconComponent = (props: IconComponentProps) => {
           <View
             className="absolute -top-1.5 -right-2 w-4 h-4 items-center justify-center rounded-full z-50"
             style={{backgroundColor: color}}>
-            <Text className="font-lexend-semibold text-xs text-[#121212]">
+            <Text
+              className="font-lexend-semibold text-[#121212]"
+              style={{fontSize: 10 / pixelRatio}}>
               {props.indicator}
             </Text>
           </View>

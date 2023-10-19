@@ -20,7 +20,7 @@ const TimetableScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [date, setDate] = useState<Date>(new Date());
   const [week, setWeek] = useState<string>('');
-  const [cardOpen, setCardOpen] = useState<Array<boolean>>([]);
+  const [openCardId, setCardOpen] = useState<number>(-1);
   const colorHex = useContext(ThemeContext);
 
   useEffect(() => {
@@ -30,10 +30,7 @@ const TimetableScreen = () => {
     setWeek(week);
 
     timetable &&
-      (setToday(timetable[(week === 'n' ? 0 : 1) * 7 + day]),
-      setCardOpen(
-        timetable[day] ? new Array(timetable[day]?.length).fill(false) : [],
-      ));
+      (setToday(timetable[(week === 'n' ? 0 : 1) * 7 + day]), setCardOpen(-1));
 
     flatListRef.current?.scrollToOffset({animated: false, offset: 0});
   }, [date, timetable, loading]);
@@ -59,39 +56,39 @@ const TimetableScreen = () => {
   return week && date ? (
     <>
       <DateContext.Provider value={{date, setDate}}>
-        <HeaderBar week={week} date={date} />
+        <HeaderBar week={week} />
+        {today ? (
+          <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
+            <SafeAreaView className="flex-1">
+              <CardOpenContext.Provider value={{openCardId, setCardOpen}}>
+                <FlatList
+                  className="min-h-full px-4"
+                  showsVerticalScrollIndicator={false}
+                  data={today}
+                  renderItem={({item, index}) => (
+                    <LessonTile i={index} {...item} />
+                  )}
+                  ref={flatListRef}
+                  ItemSeparatorComponent={() => <View className="h-4" />}
+                  ListEmptyComponent={() => <Empty />}
+                  ListHeaderComponent={() => <View className="h-3" />}
+                  ListFooterComponent={() => <View className="h-5" />}
+                  refreshControl={
+                    <RefreshControl
+                      colors={['#121212']}
+                      progressBackgroundColor={colorHex}
+                      refreshing={loading}
+                      onRefresh={() => handleRefresh()}
+                    />
+                  }
+                />
+              </CardOpenContext.Provider>
+            </SafeAreaView>
+          </SwipeComponent>
+        ) : (
+          <Loader />
+        )}
       </DateContext.Provider>
-      {today ? (
-        <SwipeComponent onSwipe={dir => handleSwipe(dir)}>
-          <SafeAreaView className="flex-1">
-            <CardOpenContext.Provider value={{cardOpen, setCardOpen}}>
-              <FlatList
-                className="min-h-full px-4"
-                showsVerticalScrollIndicator={false}
-                data={today}
-                renderItem={({item, index}) => (
-                  <LessonTile i={index} {...item} />
-                )}
-                ref={flatListRef}
-                ItemSeparatorComponent={() => <View className="h-4" />}
-                ListEmptyComponent={() => <Empty />}
-                ListHeaderComponent={() => <View className="h-3" />}
-                ListFooterComponent={() => <View className="h-5" />}
-                refreshControl={
-                  <RefreshControl
-                    colors={['#121212']}
-                    progressBackgroundColor={colorHex}
-                    refreshing={loading}
-                    onRefresh={() => handleRefresh()}
-                  />
-                }
-              />
-            </CardOpenContext.Provider>
-          </SafeAreaView>
-        </SwipeComponent>
-      ) : (
-        <Loader />
-      )}
     </>
   ) : (
     <Loader />

@@ -44,6 +44,16 @@ export const range = (start: number, stop?: number, step?: number) => {
   return result;
 };
 
+// export const addNote = (lesson: Lesson, note: string) => {
+//   lesson.notes = lesson.notes ? lesson.notes : [];
+//   lesson.notes.push(note);
+// };
+
+// export const removeNote = (lesson: Lesson, note: string) => {
+//   lesson.notes = lesson.notes ? lesson.notes : [];
+//   lesson.notes = lesson.notes.filter(n => n !== note);
+// };
+
 export const setInitialValues = async (
   course?: number,
   groups?: Array<string>,
@@ -82,20 +92,6 @@ export const setInitialValues = async (
       : await asyncStorage.removeItem('courseName');
   } catch (err) {
     console.error(err, 'in setInitialValues');
-  }
-};
-
-export const isInitialValuesSet = async () => {
-  try {
-    const course = await asyncStorage.getItem('course');
-    const groups = await asyncStorage.getItem('groups');
-    const language = await asyncStorage.getItem('language');
-    const courseName = await asyncStorage.getItem('courseName');
-
-    return course && groups && language && courseName;
-  } catch (err) {
-    console.error(err, 'in isInitialValuesSet');
-    return false;
   }
 };
 

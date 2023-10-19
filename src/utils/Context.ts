@@ -20,12 +20,12 @@ export const DateContext = createContext<DateContextType>({
 });
 
 interface CardOpenContextType {
-  cardOpen: Array<boolean>;
-  setCardOpen: Dispatch<SetStateAction<Array<boolean>>>;
+  openCardId: number
+  setCardOpen: Dispatch<SetStateAction<number>>;
 }
 
 export const CardOpenContext = createContext<CardOpenContextType>({
-  cardOpen: [],
+  openCardId: -1,
   setCardOpen: () => {},
 });
 

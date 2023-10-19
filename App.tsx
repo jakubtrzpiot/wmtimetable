@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {isInitialValuesSet} from './src/utils/helpers';
+import {useInitialValues} from './src/utils/hooks';
 import TimetableScreen from './src/screens/timetableScreen';
 import SetupScreen from './src/screens/setupScreen';
 import {Loader} from './src/components/core';
@@ -37,7 +37,7 @@ const App: React.FC = () => {
     if (!item || item === 'color')
       asyncStorage.getItem('color').then(result => result && setColor(result));
     if (!item || item === 'submit')
-      isInitialValuesSet().then(
+      useInitialValues().then(
         result => (
           setInitialValuesSet(result), setLoading(false), setSetupOpen(false)
         ),
@@ -92,3 +92,4 @@ export default App;
 //TODO get the metarial ui colors
 //TODO add readme
 //TODO maybe add smooth transitions between screens
+//FIXME fix the bug with keyboard not opening when component is too low on the screen

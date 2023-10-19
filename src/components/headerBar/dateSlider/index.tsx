@@ -1,15 +1,13 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useContext} from 'react';
 import {FlatList, View} from 'react-native';
 import {range, addDays} from '../../../utils/helpers';
 import DateCircle from './dateCircle';
 import Month from './month';
 import {Dimensions} from 'react-native';
+import {DateContext} from '../../../utils/context';
 
-interface DateSliderProps {
-  date: Date;
-}
-
-const dateSlider = ({date}: DateSliderProps) => {
+const dateSlider = () => {
+  const {date} = useContext(DateContext);
   const flatListRef = useRef<FlatList>(null);
   const days = 2 * 7;
   let dateArray = new Array(days * 2 + 1).fill(0);
