@@ -44,14 +44,14 @@ const IconComponent = (props: IconComponentProps) => {
           : {},
       ])}>
       <View className="flex-col items-center justify-center">
-        {props?.indicator && (
+        {props?.indicator !== undefined && props?.indicator !== 0 && (
           <View
             className="absolute -top-1.5 -right-2 w-4 h-4 items-center justify-center rounded-full z-50"
             style={{backgroundColor: color}}>
             <Text
               className="font-lexend-semibold text-[#121212]"
               style={{fontSize: 10 / pixelRatio}}>
-              {props.indicator}
+              {props?.indicator}
             </Text>
           </View>
         )}

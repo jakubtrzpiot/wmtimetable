@@ -1,5 +1,6 @@
 import {createContext, Dispatch, SetStateAction} from 'react';
 import {Timetable} from '../interfaces/timetable.interfaces';
+import {Note, Notes} from '../interfaces/notes.interfaces';
 
 export const ThemeContext = createContext('#c5e1f5');
 
@@ -20,7 +21,7 @@ export const DateContext = createContext<DateContextType>({
 });
 
 interface CardOpenContextType {
-  openCardId: number
+  openCardId: number;
   setCardOpen: Dispatch<SetStateAction<number>>;
 }
 
@@ -30,3 +31,15 @@ export const CardOpenContext = createContext<CardOpenContextType>({
 });
 
 export const TimetableContext = createContext<Timetable>([]);
+
+interface NotesContextType {
+  notes: Notes;
+  addNote: (note: Note) => void;
+  removeNote: (note: Note) => void;
+}
+
+export const NotesContext = createContext<NotesContextType>({
+  notes: [],
+  addNote: () => {},
+  removeNote: () => {},
+});

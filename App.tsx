@@ -10,9 +10,11 @@ import {
   LanguageContext,
   RefreshContext,
   TimetableContext,
+  NotesContext,
 } from './src/utils/context';
 import asyncStorage from './src/utils/asyncStorage';
 import {Timetable} from './src/interfaces/timetable.interfaces';
+import {Note, Notes} from './src/interfaces/notes.interfaces';
 
 const App: React.FC = () => {
   const [initialValuesSet, setInitialValuesSet] = useState(false);
@@ -21,12 +23,38 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [setupOpen, setSetupOpen] = useState(false);
   const [timetable, setTimetable] = useState<Timetable>([]);
+  const [notes, setNotes] = useState<Notes>([]);
+
+  const addNote = (note: Note) => {
+    if (!note.content.replace(/\s/g, '').length) return;
+    const newNotes = [...notes];
+    newNotes.push(note);
+    setNotes(newNotes);
+    asyncStorage.setItem('notes', newNotes);
+  };
+
+  const removeNote = (note: Note) => {
+    const newNotes = [...notes];
+    console.log(notes);
+    console.log(note);
+    const index = newNotes.findIndex(
+      n =>
+        n.content === note.content &&
+        n.date === note.date &&
+        n.lessonid === note.lessonid,
+    );
+    console.log(index);
+    newNotes.splice(index, 1);
+    setNotes(newNotes);
+    asyncStorage.setItem('notes', newNotes);
+  };
 
   useEffect(() => {
     useRefresh();
     asyncStorage
       .getItem('timetable')
       .then(result => result && setTimetable(result));
+    asyncStorage.getItem('notes').then(result => result && setNotes(result));
   }, [initialValuesSet]);
 
   const useRefresh = (item?: 'color' | 'lang' | 'submit' | 'setup') => {
@@ -59,7 +87,9 @@ const App: React.FC = () => {
               ) : !setupOpen ? (
                 <GestureHandlerRootView className="flex-1 bg-inherit">
                   <TimetableContext.Provider value={timetable}>
-                    <TimetableScreen />
+                    <NotesContext.Provider value={{notes, addNote, removeNote}}>
+                      <TimetableScreen />
+                    </NotesContext.Provider>
                   </TimetableContext.Provider>
                 </GestureHandlerRootView>
               ) : (
@@ -81,7 +111,7 @@ const App: React.FC = () => {
 export default App;
 
 //BEFORE RELEASE
-//TODO add addNote, deleteNote
+//TODO add addNote, removeNote
 //TODO add notes screen
 //TODO add note indicator
 //TODO add current time as a line across the timetable
@@ -93,3 +123,4 @@ export default App;
 //TODO add readme
 //TODO maybe add smooth transitions between screens
 //FIXME fix the bug with keyboard not opening when component is too low on the screen
+//TODO scroll to opened card when opening it

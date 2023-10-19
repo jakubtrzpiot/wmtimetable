@@ -1,4 +1,7 @@
+import {useContext, useEffect, useState} from 'react';
+import {Keyboard} from 'react-native';
 import asyncStorage from './asyncStorage';
+import {NotesContext} from './context';
 
 export const useInitialValues = async () => {
   try {
@@ -13,3 +16,40 @@ export const useInitialValues = async () => {
     return false;
   }
 };
+
+export const useNoteCount = () => {
+  const {notes} = useContext(NotesContext);
+  return notes?.length || 0;
+};
+
+const useKeyboardState = () => {
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      event => {
+        setIsKeyboardOpen(true);
+        setKeyboardHeight(event.endCoordinates.height);
+      },
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardOpen(false);
+        setKeyboardHeight(0);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  return {isKeyboardOpen, keyboardHeight};
+};
+
+export default useKeyboardState;

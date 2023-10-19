@@ -9,7 +9,7 @@ import {DateContext} from '../../../utils/context';
 const dateSlider = () => {
   const {date} = useContext(DateContext);
   const flatListRef = useRef<FlatList>(null);
-  const days = 2 * 7;
+  const days = 4 * 7;
   let dateArray = new Array(days * 2 + 1).fill(0);
   dateArray = range(-days, days + 1).map(i => ({
     date: addDays(date, i),
@@ -19,8 +19,11 @@ const dateSlider = () => {
   useEffect(() => {
     const scrollToCenter = () => {
       const {width} = Dimensions.get('window');
+      const base = (32 + 4) * days + 32;
+      const center = width / 2;
+      const unifyweeks = (days / 7 - 1) * 16;
       flatListRef?.current?.scrollToOffset({
-        offset: (32 + 4) * (days + 1) - 4 + 32 / 2 - width / 2,
+        offset: base - center + unifyweeks,
         animated: true,
       });
     };

@@ -44,16 +44,6 @@ export const range = (start: number, stop?: number, step?: number) => {
   return result;
 };
 
-// export const addNote = (lesson: Lesson, note: string) => {
-//   lesson.notes = lesson.notes ? lesson.notes : [];
-//   lesson.notes.push(note);
-// };
-
-// export const removeNote = (lesson: Lesson, note: string) => {
-//   lesson.notes = lesson.notes ? lesson.notes : [];
-//   lesson.notes = lesson.notes.filter(n => n !== note);
-// };
-
 export const setInitialValues = async (
   course?: number,
   groups?: Array<string>,

@@ -13,6 +13,7 @@ import {
   TimetableContext,
 } from '../utils/context';
 import {Day} from '../interfaces/timetable.interfaces';
+// import useKeyboardState from '../utils/hooks';
 
 const TimetableScreen = () => {
   const timetable = useContext(TimetableContext);
@@ -22,6 +23,8 @@ const TimetableScreen = () => {
   const [week, setWeek] = useState<string>('');
   const [openCardId, setCardOpen] = useState<number>(-1);
   const colorHex = useContext(ThemeContext);
+
+  // const {isKeyboardOpen, keyboardHeight} = useKeyboardState();
 
   useEffect(() => {
     const day = getDay(date);
@@ -63,6 +66,7 @@ const TimetableScreen = () => {
               <CardOpenContext.Provider value={{openCardId, setCardOpen}}>
                 <FlatList
                   className="min-h-full px-4"
+                  keyboardShouldPersistTaps="always"
                   showsVerticalScrollIndicator={false}
                   data={today}
                   renderItem={({item, index}) => (
@@ -72,7 +76,9 @@ const TimetableScreen = () => {
                   ItemSeparatorComponent={() => <View className="h-4" />}
                   ListEmptyComponent={() => <Empty />}
                   ListHeaderComponent={() => <View className="h-3" />}
-                  ListFooterComponent={() => <View className="h-5" />}
+                  ListFooterComponent={() => (
+                    <View className="h-5" style={{paddingBottom: 320}} />
+                  )}
                   refreshControl={
                     <RefreshControl
                       colors={['#121212']}

@@ -1,5 +1,11 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {View, TouchableOpacity, TextInput} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  PixelRatio,
+} from 'react-native';
 import {IconComponent, TextComponent, ViewComponent} from '../core';
 import {Subject} from '../../interfaces/timetable.interfaces';
 import subjectMap from '../../utils/subjectMap';
@@ -7,9 +13,8 @@ import {
   LanguageContext,
   CardOpenContext,
   DateContext,
+  NotesContext,
 } from '../../utils/context';
-import asyncStorage from '../../utils/asyncStorage';
-import {Note, Notes} from '../../interfaces/notes.interfaces';
 
 interface SubjectModuleProps extends Subject {
   i: number;
@@ -18,50 +23,17 @@ interface SubjectModuleProps extends Subject {
 
 const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
   const {openCardId, setCardOpen} = useContext(CardOpenContext);
-  const [note, setNote] = useState<string>('');
-  const [notes, setNotes] = useState<Notes>([]);
+  const [noteText, setNoteText] = useState<string>('');
   const [lines, setLines] = useState<number>(1);
+  const {notes, addNote, removeNote} = useContext(NotesContext);
   const {date} = useContext(DateContext);
 
-  useEffect(() => {
-    asyncStorage.getItem('notes').then(data => {
-      setNotes(
-        data.filter(
-          (note: Note) =>
-            note.date === date.toLocaleDateString() && note.lessonid === i,
-        ),
-      );
-    });
-  }, [date]);
+  const pixelRatio = PixelRatio.getFontScale();
 
-  const addNote = (note: string) => {
-    asyncStorage.getItem('notes').then(notes => {
-      const newNotes = [
-        ...notes,
-        {lessonid: i, content: note, date: date.toLocaleDateString()},
-      ];
-      asyncStorage.setItem('notes', newNotes);
-    });
-    const newNotes = [
-      ...notes,
-      {lessonid: i, content: note, date: date.toLocaleDateString()},
-    ];
-    setNotes(newNotes);
-  };
-
-  const deleteNote = (idx: number) => {
-    asyncStorage.getItem('notes').then(notes => {
-      const newNotes = notes.filter(
-        (item: Note) =>
-          item.lessonid !== idx && item.date !== date.toLocaleDateString(),
-      );
-      asyncStorage.setItem('notes', newNotes);
-    });
-    const newNotes = notes.filter((item, index) => index !== idx);
-    setNotes(newNotes);
-  };
-
-  const handleSubmitEditing = () => note && (addNote(note), setNote(''));
+  const handleSubmitEditing = () =>
+    noteText &&
+    (addNote({lessonid: i, date: date.toLocaleDateString(), content: noteText}),
+    setNoteText(''));
 
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
@@ -96,6 +68,12 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
     openCardId === i ? setCardOpen(-1) : setCardOpen(i);
   };
 
+  const filteredNotes = notes.filter(
+    note => note.lessonid === i && note.date === date.toLocaleDateString(),
+  );
+
+  const notesLength = filteredNotes.length;
+
   return (
     <TouchableOpacity
       className="flex-row flex-1 mr-2"
@@ -112,9 +90,27 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
             </TextComponent>
           </View>
           <View className="flex-row justify-between">
-            <TextComponent className="!text-[#121212] text-xs tracking-wide">
-              {teacher.toUpperCase()}
-            </TextComponent>
+            <View className="flex-row">
+              <TextComponent className="!text-[#121212] text-xs tracking-wide">
+                {teacher.toUpperCase()}
+              </TextComponent>
+              {notesLength !== 0 && (
+                <>
+                  <Text
+                    className="pl-2 font-lexend-semibold text-xs text-[#121212]"
+                    style={{fontSize: 10 / pixelRatio}}>
+                    {notesLength}
+                  </Text>
+                  <IconComponent
+                    className="ml-0.5 mt-[1]"
+                    name="bookmark"
+                    size={12}
+                    disabled
+                    customColor="#121212"
+                  />
+                </>
+              )}
+            </View>
             <TextComponent className="!text-[#121212] leading-4 tracking-wide">
               {type}
             </TextComponent>
@@ -122,33 +118,45 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
         </View>
         {i === openCardId && (
           <TouchableOpacity activeOpacity={1} className="pl-4 pr-2">
-            {notes?.length > 0 && (
+            {notesLength > 0 && (
               <TextComponent
-                className={`!text-[#121212] text-sm tracking-wide pb-2`}>
+                className={`!text-[#121212] text-[13px] tracking-wide pb-4 -mt-4`}>
                 {en ? 'Notes:' : 'Notatki:'}
               </TextComponent>
             )}
-            {notes?.map((note, idx) => (
-              <View key={idx} className="flex-row">
-                <TextComponent
-                  className={`flex-1 !text-[#121212] text-xs tracking-wide pb-2`}>
-                  {`${note.content}`}
-                </TextComponent>
-                <IconComponent
-                  className="px-2"
-                  name="close-thick"
-                  size={14}
-                  customColor="#121212"
-                  onPress={() => deleteNote(idx)}
-                />
-              </View>
-            ))}
+            {notes
+              .filter(
+                note =>
+                  note.lessonid === i &&
+                  note.date === date.toLocaleDateString(),
+              )
+              ?.map((note, idx) => (
+                <View key={idx} className="flex-row">
+                  <TextComponent
+                    className={`flex-1 !text-[#121212] text-xs tracking-wide pb-2`}>
+                    {`${note.content}`}
+                  </TextComponent>
+                  <IconComponent
+                    className="px-2"
+                    name="close"
+                    size={14}
+                    customColor="#121212"
+                    onPress={() =>
+                      removeNote({
+                        lessonid: i,
+                        date: date.toLocaleDateString(),
+                        content: filteredNotes[idx].content,
+                      })
+                    }
+                  />
+                </View>
+              ))}
             <TextInput
               className="!text-[#121212] text-xs tracking-wide font-lexend-semibold pb-1.5 pt-0 pl-0 pr-2"
               placeholder={en ? 'Add note' : 'Dodaj notatkę'}
               placeholderTextColor="#121212"
-              value={note}
-              onChangeText={text => setNote(text)}
+              value={noteText}
+              onChangeText={text => setNoteText(text)}
               onSubmitEditing={() => handleSubmitEditing()}
               textAlignVertical="top"
             />

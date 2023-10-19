@@ -5,6 +5,8 @@ import WeekType from './weekType';
 import {IconComponent} from '../../core';
 import asyncStorage from '../../../utils/asyncStorage';
 import {RefreshContext} from '../../../utils/context';
+import NotesScreen from '../../../screens/notesScreen';
+import {useNoteCount} from '../../../utils/hooks';
 
 interface TopBarProps {
   week: string;
@@ -12,7 +14,9 @@ interface TopBarProps {
 
 const TopBar: React.FC<TopBarProps> = ({week}: TopBarProps) => {
   const [courseName, setCourseName] = useState<string>('');
+  const [notesOpen, setNotesOpen] = useState<boolean>(false);
   const useRefresh = useContext(RefreshContext);
+  const noteCount = useNoteCount();
 
   useEffect(() => {
     asyncStorage
@@ -35,8 +39,10 @@ const TopBar: React.FC<TopBarProps> = ({week}: TopBarProps) => {
           className="px-5 py-2"
           size={24}
           name="notebook"
-          indicator={38}
+          indicator={noteCount}
           center
+          disabled={noteCount === 0}
+          onPress={() => setNotesOpen(!notesOpen)}
         />
         <IconComponent
           className="pr-4 pl-5 py-2"
@@ -46,6 +52,10 @@ const TopBar: React.FC<TopBarProps> = ({week}: TopBarProps) => {
           onPress={() => handlePlanChange()}
         />
       </View>
+      <NotesScreen
+        visible={notesOpen}
+        onRequestClose={() => setNotesOpen(false)}
+      />
     </View>
   );
 };

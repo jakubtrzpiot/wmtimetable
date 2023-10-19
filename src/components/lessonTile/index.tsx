@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {KeyboardAvoidingView} from 'react-native';
+import {View} from 'react-native';
 import {Lesson, Subject} from '../../interfaces/timetable.interfaces';
 import TimeModule from './timeModule';
 import SubjectModule from './subjectModule';
@@ -16,9 +16,7 @@ const LessonTile = ({time, subject, i}: LessonTileProps) => {
 
   subject = subject as Subject;
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      className={`flex-row ${openCardId === i ? 'min-h-[70]' : 'h-[70]'}`}>
+    <View className={`flex-row ${openCardId === i ? 'min-h-[70]' : 'h-[70]'}`}>
       <TimeModule {...time} />
       {subject ? (
         <>
@@ -28,7 +26,7 @@ const LessonTile = ({time, subject, i}: LessonTileProps) => {
       ) : (
         <FreePeriod />
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
