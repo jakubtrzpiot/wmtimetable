@@ -32,8 +32,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
 
   const handleSubmitEditing = () =>
     noteText &&
-    (addNote({lessonid: i, date: date.toLocaleDateString(), content: noteText}),
-    setNoteText(''));
+    (addNote({lessonid: i, date: date, content: noteText}), setNoteText(''));
 
   const lang = useContext(LanguageContext);
   const en = lang === 'en';
@@ -69,7 +68,9 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
   };
 
   const filteredNotes = notes.filter(
-    note => note.lessonid === i && note.date === date.toLocaleDateString(),
+    note =>
+      note.lessonid === i &&
+      note.date.toLocaleDateString() === date.toLocaleDateString(),
   );
 
   const notesLength = filteredNotes.length;
@@ -128,7 +129,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
               .filter(
                 note =>
                   note.lessonid === i &&
-                  note.date === date.toLocaleDateString(),
+                  note.date.toLocaleDateString() === date.toLocaleDateString(),
               )
               ?.map((note, idx) => (
                 <View key={idx} className="flex-row">
@@ -144,7 +145,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
                     onPress={() =>
                       removeNote({
                         lessonid: i,
-                        date: date.toLocaleDateString(),
+                        date: date,
                         content: filteredNotes[idx].content,
                       })
                     }

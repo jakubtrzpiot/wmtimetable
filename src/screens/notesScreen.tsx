@@ -10,8 +10,8 @@ interface NotesScreenProps extends ModalProps {}
 const NotesScreen = (props: NotesScreenProps) => {
   const {notes} = useContext(NotesContext);
 
-  const toLocale = (date: string) => {
-    return new Date(date).toLocaleDateString('pl-PL', {
+  const toLocale = (date: Date) => {
+    return date.toLocaleDateString('pl-PL', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -38,14 +38,12 @@ const NotesScreen = (props: NotesScreenProps) => {
         {notes.length ? (
           <FlatList
             className="px-4 pt-4"
-            data={notes.sort(
-              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-            )}
+            data={notes.sort((a, b) => a.date.getTime() - b.date.getTime())}
             renderItem={({item, index}) => {
               const same =
                 index === 0 ||
-                new Date(item.date).toLocaleDateString() !==
-                  new Date(notes[index - 1].date).toLocaleDateString();
+                item.date.toLocaleDateString() !==
+                  notes[index - 1].date.toLocaleDateString();
               return (
                 <>
                   {same && (

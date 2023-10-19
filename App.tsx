@@ -40,7 +40,7 @@ const App: React.FC = () => {
     const index = newNotes.findIndex(
       n =>
         n.content === note.content &&
-        n.date === note.date &&
+        n.date.toLocaleDateString() === note.date.toLocaleDateString() &&
         n.lessonid === note.lessonid,
     );
     console.log(index);

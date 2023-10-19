@@ -1,20 +1,20 @@
 import React, {useState, useContext} from 'react';
 import {TextComponent, ViewComponent} from './core';
 import {Note} from '../interfaces/notes.interfaces';
-import {TouchableOpacity, NativeSyntheticEvent} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {CardOpenContext, DateContext} from '../utils/context';
 
-const NoteCard = ({item, i, close}: {item: Note; i: number; close: any}) => {
+const NoteCard = ({item, close}: {item: Note; i: number; close: any}) => {
   const [lines, setLines] = useState<number>(1);
   const {setDate} = useContext(DateContext);
-  const {setCardOpen} = useContext(CardOpenContext);
+  // const {setCardOpen} = useContext(CardOpenContext);
 
   const rounded = ['rounded-[20px]', 'rounded-[24px]'];
 
   const handlePick = () => {
-    setDate(new Date(item.date));
+    setDate(item.date);
     close(true);
-    setCardOpen(item.lessonid);
+    // setCardOpen(item.lessonid);
   };
 
   return (
