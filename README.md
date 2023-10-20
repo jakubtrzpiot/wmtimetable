@@ -83,14 +83,14 @@ Run the following command to start your _Android_ or _iOS_ app:
 ```bash
 yarn android
 ``` 
-or just click ```a``` in the metro terminal
+or just click **a** in the metro terminal
 
 ### For iOS
 
 ```bash
 yarn ios
 ```
-or just click ```i``` in the metro terminal
+or just click **i** in the metro terminal
 
 # Learn More
 
