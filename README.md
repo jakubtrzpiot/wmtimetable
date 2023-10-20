@@ -1,26 +1,28 @@
-
 # Plan WM - Timetable App for Students at Cracow University of Technology's Faculty of Mechanical Engineering
 
-Plan WM is a feature-rich mobile application designed to help students at the Faculty of Mechanical Engineering of Cracow University of Technology manage their schedules efficiently. This app allows you to choose your timetable, student groups, courses, add notes, and personalize the app's appearance.
+Plan WM is a feature-rich mobile application designed to help students at the Faculty of Mechanical Engineering of Cracow University of Technology manage their schedules efficiently. This app allows you to choose your timetable, add notes, and personalize the app's appearance.
 
 ## Features
 
-- **Timetable Selection**: Choose your academic timetable for the Faculty of Mechanical Engineering, making it easy to track your commitments.
-![Timetable Selection](timetable_selection.png)
-
-- **Student Groups and Courses**: Organize your schedule by adding student groups and courses, making it convenient to track your academic commitments within the Faculty of Mechanical Engineering.
-![Student Groups and Courses](student_groups.png)
+- **Timetable Selection and Student Groups**: Choose your academic timetable and organize your schedule by adding student groups, making it convenient to track your academic commitments within the Faculty of Mechanical Engineering.
+![Timetable and Student Groups](timetable_student_groups.png)
 
 - **Note Management**: Add and store important notes related to your studies, timetable, or any other topic, keeping everything in one place.
 ![Note Management](note_management.png)
 
-- **Customizable App Color**: Personalize the app's appearance by choosing a color theme that suits your style and preferences.
-![Customizable App Color](app_color.png)
-
 - **Note Screen**: Access a dedicated note screen where you can view, edit, and organize all your notes effortlessly.
 ![Note Screen](note_screen.png)
 
+- **Customizable App Color**: Personalize the app's appearance by choosing a color theme that suits your style and preferences.
+![Customizable App Color](app_color.png)
+
 Data Persistence: All your timetable data and notes are automatically saved to your device's storage using the AsyncStorage library, ensuring you don't lose your data.
+
+## Download Plan WM (Beta)
+
+You can download Plan WM (Beta) from the following link:
+
+- [Download Plan WM Beta](https://drive.google.com/file/d/14TitxuKj4EFy4gIunoPOs5OZnGces6vh/view?usp=drivesdk)
 
 <!--- Installation
 
@@ -37,6 +39,7 @@ Contributing
 License
 
 [Specify the license you are using for your project]-->
+
 
 # Getting Started
 
