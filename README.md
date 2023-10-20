@@ -54,7 +54,7 @@ License
 
 ## Step 1: Update required npm packages
 
-First, you will have to **download/update** _npm packages_ required by the project.
+First, you will have to download/update **npm packages** _required_ by the project.
 
 To download/update the packages run the following command from the _root_ of the project:
 
@@ -83,14 +83,14 @@ Run the following command to start your _Android_ or _iOS_ app:
 ```bash
 yarn android
 ``` 
-or just click _a_ in the metro terminal
+or just click ```a``` in the metro terminal
 
 ### For iOS
 
 ```bash
 yarn ios
 ```
-or just click _i_ in the metro terminal
+or just click ```i``` in the metro terminal
 
 # Learn More
 
