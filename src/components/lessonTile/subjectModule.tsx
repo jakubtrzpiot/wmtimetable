@@ -67,11 +67,12 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
     openCardId === i ? setCardOpen(-1) : setCardOpen(i);
   };
 
-  const filteredNotes = notes.filter(
-    note =>
+  const filteredNotes = notes.filter(note => {
+    return (
       note.lessonid === i &&
-      note.date.toLocaleDateString() === date.toLocaleDateString(),
-  );
+      note.date.toLocaleDateString() === date.toLocaleDateString()
+    );
+  });
 
   const notesLength = filteredNotes.length;
 
@@ -121,7 +122,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
           <TouchableOpacity activeOpacity={1} className="pl-4 pr-2">
             {notesLength > 0 && (
               <TextComponent
-                className={`!text-[#121212] text-[13px] tracking-wide pb-4 -mt-4`}>
+                className={`!text-[#121212] text-[13px] tracking-wide pb-2 -mt-4`}>
                 {en ? 'Notes:' : 'Notatki:'}
               </TextComponent>
             )}
@@ -132,12 +133,12 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
                   note.date.toLocaleDateString() === date.toLocaleDateString(),
               )
               ?.map((note, idx) => (
-                <View key={idx} className="flex-row">
+                <View key={idx} className="flex-row mb-2">
                   <TextComponent
                     className={`flex-1 !text-[#121212] text-xs tracking-wide pb-2`}>
-                    {`${note.content}`}
+                    {`- ${note.content}`}
                   </TextComponent>
-                  <IconComponent
+                  {/* <IconComponent
                     className="px-2"
                     name="close"
                     size={14}
@@ -149,7 +150,7 @@ const SubjectModule = ({name, teacher, type, i}: SubjectModuleProps) => {
                         content: filteredNotes[idx].content,
                       })
                     }
-                  />
+                  /> */}
                 </View>
               ))}
             <TextInput

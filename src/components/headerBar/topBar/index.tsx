@@ -35,15 +35,16 @@ const TopBar: React.FC<TopBarProps> = ({week}: TopBarProps) => {
         <WeekType weekType={week} />
       </View>
       <View className="flex-row items-center justify-end">
-        <IconComponent
-          className="px-5 py-2"
-          size={24}
-          name="notebook"
-          indicator={noteCount}
-          center
-          disabled={noteCount === 0}
-          onPress={() => setNotesOpen(!notesOpen)}
-        />
+        {noteCount !== 0 && (
+          <IconComponent
+            className="px-5 py-2"
+            size={24}
+            name="notebook"
+            indicator={noteCount}
+            center
+            onPress={() => setNotesOpen(!notesOpen)}
+          />
+        )}
         <IconComponent
           className="pr-4 pl-5 py-2"
           name="calendar"

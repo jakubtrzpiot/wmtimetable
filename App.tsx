@@ -35,15 +35,12 @@ const App: React.FC = () => {
 
   const removeNote = (note: Note) => {
     const newNotes = [...notes];
-    console.log(notes);
-    console.log(note);
     const index = newNotes.findIndex(
       n =>
         n.content === note.content &&
         n.date.toLocaleDateString() === note.date.toLocaleDateString() &&
         n.lessonid === note.lessonid,
     );
-    console.log(index);
     newNotes.splice(index, 1);
     setNotes(newNotes);
     asyncStorage.setItem('notes', newNotes);
@@ -54,7 +51,18 @@ const App: React.FC = () => {
     asyncStorage
       .getItem('timetable')
       .then(result => result && setTimetable(result));
-    asyncStorage.getItem('notes').then(result => result && setNotes(result));
+    const today = new Date().getTime();
+    asyncStorage
+      .getItem('notes')
+      .then(
+        result =>
+          result &&
+          setNotes(
+            result
+              .map((note: Note) => ({...note, date: new Date(note.date)}))
+              .filter((note: Note) => today - note.date.getTime() < 604800000),
+          ),
+      );
   }, [initialValuesSet]);
 
   const useRefresh = (item?: 'color' | 'lang' | 'submit' | 'setup') => {
