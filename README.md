@@ -4,8 +4,11 @@ Plan WM is a feature-rich mobile application designed to help students at the Fa
 
 ## Features
 
+- **Timetable Screen**: Offers a quick and easy view of your timetable.
+![Timetable Screen](timetable_screeb.png)
+
 - **Timetable Selection and Student Groups**: Choose your academic timetable and organize your schedule by adding student groups, making it convenient to track your academic commitments within the Faculty of Mechanical Engineering.
-![Timetable and Student Groups](timetable_student_groups.png)
+![Timetable and Student Groups](edit_settings.png)
 
 - **Note Management**: Add and store important notes related to your studies, timetable, or any other topic, keeping everything in one place.
 ![Note Management](note_management.png)
@@ -14,7 +17,7 @@ Plan WM is a feature-rich mobile application designed to help students at the Fa
 ![Note Screen](note_screen.png)
 
 - **Customizable App Color**: Personalize the app's appearance by choosing a color theme that suits your style and preferences.
-![Customizable App Color](app_color.png)
+![Customizable App Color](edit_color.png)
 
 - **Data Persistence**: All your timetable data and notes are automatically saved to your device's storage using the AsyncStorage library, ensuring you don't lose your data.
 
