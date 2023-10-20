@@ -18,11 +18,18 @@ Plan WM is a feature-rich mobile application designed to help students at the Fa
 
 Data Persistence: All your timetable data and notes are automatically saved to your device's storage using the AsyncStorage library, ensuring you don't lose your data.
 
-## Download Plan WM (Beta)
 
-You can download Plan WM (Beta) from the following link:
+## Releases
 
-- [Download Plan WM Beta](https://drive.google.com/file/d/14TitxuKj4EFy4gIunoPOs5OZnGces6vh/view?usp=drivesdk)
+You can get the APK for Plan WM Beta below:
+
+- [Plan WM Beta APK](https://drive.google.com/file/d/14TitxuKj4EFy4gIunoPOs5OZnGces6vh/view?usp=drivesdk)
+
+Changelog for this release:
+
+- Added feature to create and manage notes.
+- Improved user interface for a more customizable experience.
+- Fixed minor bugs and issues for enhanced stability.
 
 <!--- Installation
 
