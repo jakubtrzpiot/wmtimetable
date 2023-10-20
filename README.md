@@ -16,7 +16,7 @@ Plan WM is a feature-rich mobile application designed to help students at the Fa
 - **Customizable App Color**: Personalize the app's appearance by choosing a color theme that suits your style and preferences.
 ![Customizable App Color](app_color.png)
 
-Data Persistence: All your timetable data and notes are automatically saved to your device's storage using the AsyncStorage library, ensuring you don't lose your data.
+- **Data Persistence**: All your timetable data and notes are automatically saved to your device's storage using the AsyncStorage library, ensuring you don't lose your data.
 
 
 ## Releases
