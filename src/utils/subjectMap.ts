@@ -1,6 +1,6 @@
 interface SubjectMap {
   [key: string]: string;
-};
+}
 
 const subjectMap: SubjectMap = {
   MaszTMiM: 'Maszynoznawstwo z teorią mechanizmów i maszyn',
@@ -8,6 +8,7 @@ const subjectMap: SubjectMap = {
   TKszWyr2: 'Technologie kształtowania wyrobów II',
   'J angielski': 'Język angielski',
   Mechanpł: 'Mechanika płynów',
+  MechPłyn: 'Mechanika płynów',
   PAutRob: 'Podstawy automatyzacji i robotyzacji',
   UElAutom: 'Układy elektroniczne w automatyce',
   MiernDyn: 'Miernictwo dynamiczne',

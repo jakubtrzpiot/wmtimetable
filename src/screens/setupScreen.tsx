@@ -1,24 +1,33 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Alert, Modal} from 'react-native';
+import {View, Alert, Modal, Image} from 'react-native';
 import {
-  TextComponent,
+  IconComponent,
   LabeledComponent,
   LabeledTextInputComponent,
   SwitchComponent,
   Loader,
   ButtonComponent,
+  PickerComponent,
 } from '../components/core';
+import ChangeColorModal from '../components/modals/changeColorModal';
 import {
   setInitialValues,
   fetchTimetable,
   fetchCourseName,
 } from '../utils/helpers';
-import {RefreshContext} from '../utils/context';
+import {LanguageContext, RefreshContext, ThemeContext} from '../utils/context';
 import asyncStorage from '../utils/asyncStorage';
 
-const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
+const SetupScreen = ({
+  isSetup,
+  setTimetable,
+}: {
+  isSetup: boolean;
+  setTimetable: any;
+}) => {
   //TODO refactor this mess
   const [course, setCourse] = useState<string>('');
+  const [previousGroups, setPreviousGroups] = useState<string[]>([]);
   const [previousCourse, setPreviousCourse] = useState<string>('');
   const [lab, onChangeLab] = useState<string>('');
   const [computerLab, onChangeComputerLab] = useState<string>('');
@@ -27,10 +36,31 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
   const useRefresh = useContext(RefreshContext);
   const [courseName, setCourseName] = useState<string>('No course');
   const [lang, setLanguage] = useState<string>('en');
-  const [toggleClicks, setToggleClicks] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [modalOpen, setModalOpen] = useState<boolean>(true);
-  const en = lang === 'en';
+  const [setupModalOpen, setSetupModalOpen] = useState<boolean>(true);
+  const language = useContext(LanguageContext);
+  const en = language === 'en';
+
+  const color = useContext(ThemeContext);
+
+  /// Picker
+  const [courseOpen, setCourseOpen] = useState(false);
+  const [courseItems, setCourseItems] = useState([
+    {label: '12A1', value: '22'},
+    {label: '12A2', value: '23'},
+    {label: '12A3', value: '24'},
+  ]);
+
+  const [englishOpen, setEnglishOpen] = useState(false);
+  const [englishItems, setEnglishItems] = useState([
+    {label: 'DG3', value: 'dg3'},
+    {label: 'DG4', value: 'dg4'},
+    {label: 'EB2', value: 'eb2'},
+    {label: 'WG1', value: 'wg1'},
+    {label: 'WG7', value: 'wg7'},
+  ]);
+
+  const [colorModalOpen, setColorModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     asyncStorage.getItem('language').then(data => {
@@ -52,24 +82,27 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
 
     asyncStorage
       .getItem('groups')
-      .then(data =>
-        data?.map((group: string) => {
-          if (group === 'all') return;
-          switch (group[0]) {
-            case 'l':
-              onChangeLab(group.slice(1));
-              break;
-            case 'k':
-              onChangeComputerLab(group.slice(1));
-              break;
-            case 'p':
-              onChangeProject(group.slice(1));
-              break;
-            default:
-              onChangeEnglish(group);
-              break;
-          }
-        }),
+      .then(
+        data => (
+          setPreviousGroups(data),
+          data?.map((group: string) => {
+            if (group === 'all') return;
+            switch (group[0]) {
+              case 'l':
+                onChangeLab(group.slice(1));
+                break;
+              case 'k':
+                onChangeComputerLab(group.slice(1));
+                break;
+              case 'p':
+                onChangeProject(group.slice(1));
+                break;
+              default:
+                onChangeEnglish(group);
+                break;
+            }
+          })
+        ),
       )
       .catch(err => console.log(err));
   }, []);
@@ -91,42 +124,44 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
   };
 
   const handleSubmit = () => {
+    const rawGroups = [lab, computerLab, project].map((el: string) =>
+      el.length === 1 ? '0' + el : el,
+    );
     let groups: string[] = [];
+
     !(course && lab && computerLab && project && english)
-      ? (console.log('not all values set'),
-        showAlert(
-          'Not all values set',
-          'Please fill all the fields to continue.',
-        ))
-      : parseInt(course) > 0 &&
-        parseInt(lab) > 0 &&
-        parseInt(lab) < 9 &&
-        parseInt(computerLab) > 0 &&
-        parseInt(computerLab) < 9 &&
-        parseInt(project) > 0 &&
-        parseInt(project) < 9 &&
+      ? (console.log('not all values set'), showAlert('Błąd', 'Sprawdź dane'))
+      : parseInt(course) >= 1 &&
+        rawGroups.every(
+          group => parseInt(group) >= 1 && parseInt(group) <= 7,
+        ) &&
         /^[a-zA-Z]{2}\d?$/.test(english)
       ? ((groups = [
-          `l${lab}`,
-          `k${computerLab}`,
-          `p${project}`,
+          `l${rawGroups[0]}`,
+          `k${rawGroups[1]}`,
+          `p${rawGroups[2]}`,
           english,
           'all',
         ]),
-        setInitialValues(parseInt(course), groups, lang, courseName).then(() =>
-          fetchTimetable(
-            !(course === previousCourse) || !(toggleClicks % 2 === 0),
-          ).then(
+        setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>
+          fetchTimetable(true).then(
             () => (
-              useRefresh('submit'), useRefresh('lang'), setModalOpen(false)
+              useRefresh('submit'),
+              useRefresh('lang'),
+              setSetupModalOpen(false),
+              setColorModalOpen(false),
+              asyncStorage
+                .getItem('timetable')
+                .then(result => setTimetable(result))
             ),
           ),
         ))
-      : (console.log('incorrect values'), showAlert('Incorrect values', ''));
+      : (console.log('incorrect values'), showAlert('Błąd', 'Sprawdź dane'));
   };
 
   const handleBack = () => {
-    setModalOpen(false);
+    setSetupModalOpen(false);
+    setColorModalOpen(false);
     useRefresh('setup');
   };
 
@@ -141,33 +176,50 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
       : setCourseName((invert ? !en : en) ? 'No course' : 'Brak kierunku');
   };
 
-  const handleLanguageChange = () => {
-    setLanguage(en ? 'pl' : 'en');
-    setToggleClicks(toggleClicks + 1);
-    onChangeCourse(course, true);
-  };
-
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalOpen}
+      visible={setupModalOpen}
       onRequestClose={() => !isSetup && handleBack()}>
       {(!loading && (
-        <View className="flex-1 px-4 mt-20 bg-[#121212]">
-          <LabeledTextInputComponent
-            underline
-            label={en ? 'Enter your course number:' : 'Wpisz numer planu:'}
-            inputMode="numeric"
-            maxLength={2}
-            onChangeText={text => onChangeCourse(text)}
-            value={course}
+        <View className="flex-1 justify-start px-4 bg-[#121212]">
+          <Image
+            source={require('../components/core/appIcon.png')}
+            className="h-16 w-[154] self-center my-16"
+            style={[{tintColor: color}]}
           />
-
-          <TextComponent className="mb-4">{`${
-            en ? 'Selected course:' : 'Wybrany kierunek:'
-          } ${courseName}`}</TextComponent>
-
+          <LabeledComponent
+            className="mb-7"
+            label={en ? 'Select a course:' : 'Wybierz kierunek:'}>
+            <PickerComponent
+              labeled
+              placeholder={en ? 'Course' : 'Kierunek'}
+              open={courseOpen}
+              value={course}
+              items={courseItems}
+              setOpen={setCourseOpen}
+              setValue={setCourse}
+              setItems={setCourseItems}
+              onChangeValue={(value: string) => value && onChangeCourse(value)}
+              onOpen={() => setEnglishOpen(false)}
+            />
+          </LabeledComponent>
+          <LabeledComponent
+            className="mb-5"
+            label={en ? 'English group:' : 'Grupa językowa:'}>
+            <PickerComponent
+              labeled
+              placeholder={en ? 'Group' : 'Grupa'}
+              open={englishOpen}
+              value={english}
+              items={englishItems}
+              setOpen={setEnglishOpen}
+              setValue={onChangeEnglish}
+              setItems={setEnglishItems}
+              onOpen={() => setCourseOpen(false)}
+            />
+          </LabeledComponent>
           <LabeledTextInputComponent
             underline
             className="mb-4"
@@ -177,7 +229,6 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
             onChangeText={text => onChangeLab(text)}
             value={lab}
           />
-
           <LabeledTextInputComponent
             underline
             className="mb-4"
@@ -189,7 +240,6 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
             onChangeText={text => onChangeComputerLab(text)}
             value={computerLab}
           />
-
           <LabeledTextInputComponent
             underline
             className="mb-4"
@@ -199,30 +249,22 @@ const SetupScreen = ({isSetup}: {isSetup: boolean}) => {
             onChangeText={text => onChangeProject(text)}
             value={project}
           />
-
-          <LabeledTextInputComponent
-            underline
-            className="mb-2"
-            label={en ? 'English group:' : 'Grupa językowa:'}
-            inputMode="text"
-            maxLength={3}
-            onChangeText={text => onChangeEnglish(text)}
-            value={english}
-          />
-
-          <LabeledComponent
-            className="mb-8"
-            label={en ? 'Language:' : 'Język:'}>
-            <SwitchComponent
-              left="PL"
-              right="EN"
-              value={en}
-              onValueChange={() => handleLanguageChange()}
+          <LabeledComponent className="" label="Zmień kolor:">
+            <IconComponent
+              name="palette"
+              size={24}
+              label={color.toUpperCase()}
+              onPress={() => setColorModalOpen(true)}
             />
           </LabeledComponent>
+          <ChangeColorModal
+            modalOpen={colorModalOpen}
+            setModalOpen={setColorModalOpen}
+          />
 
           <ButtonComponent
             full
+            className="mt-10"
             onPress={() => handleSubmit()}
             text={en ? 'Save' : 'Zapisz'}></ButtonComponent>
         </View>

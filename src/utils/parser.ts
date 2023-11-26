@@ -1,6 +1,6 @@
 import {DOMParser as parser} from 'react-native-html-parser';
 import {WM_URL} from './constants';
-import {Timetable, Subject} from '../interfaces/timetable.interfaces';
+import {Timetable, Subject, Lesson} from '../interfaces/timetable.interfaces';
 import asyncStorage from './asyncStorage';
 
 const transpose = (array: Array<any>) => {
@@ -33,11 +33,13 @@ const unwrap = (node: any) => {
             .split('-')[1]
             .trim()
             .replace(/[()]/g, '')
+            .replace('.', '')
             .toLowerCase()[0];
         } catch (err) {
           week = subject.nextSibling.nodeValue
             .trim()
             .replace(/[()\-0-9]/g, '')
+            .replace('.', '')
             .toLowerCase();
         }
 
@@ -58,7 +60,7 @@ const unwrap = (node: any) => {
             : p.trim().split(' ')[1].split('-')[0].toLowerCase();
 
         let type = t[0];
-        console.log('p:', p, 't:', t);
+
         const group =
           t.length > 1
             ? t
@@ -66,7 +68,9 @@ const unwrap = (node: any) => {
             ? subject.nextSibling.nextSibling.firstChild.nodeValue
                 .replace('#', '')
                 .toLowerCase()
-            : 'all';
+            : ['ć', 'w'].includes(type)
+            ? 'all'
+            : null;
 
         let room = node
           .getElementsByAttribute('class', 's')
@@ -87,12 +91,48 @@ const unwrap = (node: any) => {
       });
   } else {
     //no subject
-    return null;
+    return [];
   }
 };
 
+const stripNullValuesFromEdges = (array: Array<any>) => {
+  // Remove null values from the beginning of the array
+  while (array.length > 0 && array[0].subject === null) {
+    array.shift();
+  }
+
+  // Remove null values from the end of the array
+  while (array.length > 0 && array[array.length - 1].subject === null) {
+    array.pop();
+  }
+
+  return array;
+};
+
+const filter = (timetable: Timetable, groups: Array<string>) => {
+  const byWeek = (week: string) =>
+    timetable.map(
+      day =>
+        day &&
+        stripNullValuesFromEdges(
+          day.map(({time, subject}: Lesson) => ({
+            time,
+            subject:
+              (subject as Subject[])?.filter(
+                subject =>
+                  groups.includes(subject.group) && subject.week.includes(week),
+              )[0] || null,
+          })),
+        ),
+    );
+
+  const result = [...byWeek('n'), [], [], ...byWeek('p'), [], []];
+  // console.log(result);
+  return result;
+};
+
 export const parseTimetable = async (course: number): Promise<Timetable> => {
-  const lang = await asyncStorage.getItem('language');
+  const groups = await asyncStorage.getItem('groups');
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
@@ -118,18 +158,90 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         return {start: hour[0], end: hour[1]};
       });
 
-      const timetable = transposed.slice(1).map((day: any) => {
+      let timetable = transposed.slice(1).map((day: any) => {
         return day.map((lesson: any, i: number) => {
           const time = hours[i];
           return {
             time,
-            subject: unwrap(lesson) || null,
+            subject: unwrap(lesson) || [],
           };
         });
       });
 
-      // console.log('timetable:', timetable);
-      return timetable as Timetable;
+      interface LessonProps {
+        dayIndex: number;
+        lessonIndex: number | number[];
+        subject: {
+          name: string;
+          group?: string;
+          week?: string;
+          type?: string;
+          teacher?: string;
+          room?: string;
+        };
+      }
+
+      const insertLessons = ({lessonIndex, dayIndex, subject}: LessonProps) => {
+        for (let idx of lessonIndex as number[]) {
+          timetable[dayIndex][idx].subject.push(subject);
+        }
+      };
+
+      const lessonsToInsert: LessonProps[] = [
+        {
+          dayIndex: 0,
+          lessonIndex: [10, 11],
+          subject: {
+            name: 'J angielski',
+            group: 'dg3',
+            week: 'pn',
+            type: 'j',
+            teacher: 'DG',
+            room: 'IDK',
+          },
+        },
+        {
+          dayIndex: 0,
+          lessonIndex: [12, 13],
+          subject: {
+            name: 'J angielski',
+            group: 'dg4',
+            week: 'pn',
+            type: 'j',
+            teacher: 'DG',
+            room: 'IDK',
+          },
+        },
+      ];
+
+      lessonsToInsert.map(lesson => insertLessons(lesson));
+
+      const deleteLessons = ({lessonIndex, dayIndex, subject}: LessonProps) => {
+        for (let idx of lessonIndex as number[]) {
+          let subjectIndex = 0;
+          while (subjectIndex > -1) {
+            subjectIndex = timetable[dayIndex][idx].subject
+              .slice(subjectIndex)
+              .findIndex((s: Subject) => s.name === subject.name);
+
+            timetable[dayIndex][idx].subject.pop(subjectIndex);
+          }
+        }
+      };
+
+      const lessonsToDelete: LessonProps[] = [
+        {
+          dayIndex: 4,
+          lessonIndex: [10, 11, 12, 13],
+          subject: {name: 'J angielski'},
+        },
+      ];
+
+      lessonsToDelete.map(lesson => deleteLessons(lesson));
+
+      timetable = filter(timetable, groups);
+
+      return timetable;
     })
     .catch(err => err && console.error(err, 'parseTimetable'));
 };

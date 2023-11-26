@@ -11,7 +11,7 @@ interface SwipeComponentProps {
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   children: React.ReactNode;
-};
+}
 
 const SwipeComponent = ({
   onSwipe,

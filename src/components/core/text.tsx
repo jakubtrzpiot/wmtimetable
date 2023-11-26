@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {Text, TextProps, StyleSheet} from 'react-native';
-import classNames from 'classnames';
 import {ThemeContext} from '../../utils/context';
 
 const TextComponent = (props: TextProps) => {
@@ -10,13 +9,17 @@ const TextComponent = (props: TextProps) => {
 
   return (
     <Text
-      className={classNames('font-lexend-semibold', props?.className)}
+      maxFontSizeMultiplier={1}
+      className={props?.className}
+      disabled={true}
       style={StyleSheet.flatten([
         setColor && {
           color: color,
         },
+        {fontFamily: 'Lexend-SemiBold'},
         props?.style,
-      ])}>
+      ])}
+      {...props}>
       {props?.children}
     </Text>
   );

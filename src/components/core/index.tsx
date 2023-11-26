@@ -7,6 +7,7 @@ import TextComponent from './text';
 import TextInputComponent from './textInput';
 import {LabeledComponent, LabeledTextInputComponent} from './labeled';
 import ViewComponent from './view';
+import PickerComponent from './picker';
 
 export {
   ButtonComponent,
@@ -19,4 +20,5 @@ export {
   LabeledComponent,
   LabeledTextInputComponent,
   ViewComponent,
+  PickerComponent,
 };

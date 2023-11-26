@@ -2,11 +2,13 @@ import React from 'react';
 import {View} from 'react-native';
 import {TextComponent} from '../core';
 
-interface Room {room: string};
+interface Room {
+  room: string;
+}
 
 const RoomModule = ({room}: Room) => {
   return (
-    <View className="justify-center w-[12]">
+    <View className="justify-center w-[4%]">
       {[...room].map((letter, index) => (
         <TextComponent
           key={index}

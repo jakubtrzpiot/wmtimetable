@@ -3,12 +3,14 @@ import {View} from 'react-native';
 import TopBar from './topBar';
 import DateSlider from './dateSlider';
 
-interface HeaderBarProps {week: string; date: Date};
+interface HeaderBarProps {
+  week: string;
+}
 
-const HeaderBar = ({week, date}: HeaderBarProps) => (
+const HeaderBar = ({week}: HeaderBarProps) => (
   <View className="pt-2 pb-3">
-    <TopBar week={week} date={date} />
-    <DateSlider date={date} />
+    <TopBar week={week} />
+    <DateSlider />
   </View>
 );
 

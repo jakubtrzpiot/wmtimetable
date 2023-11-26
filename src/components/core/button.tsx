@@ -22,7 +22,10 @@ const ButtonComponent = (props: ButtonComponentProps) => {
         style={StyleSheet.flatten([{backgroundColor: color}, props?.style])}
         onPress={props?.onPress}
         onLongPress={props?.onLongPress}>
-        <TextComponent style={{color: '#121212'}}>{props?.text}</TextComponent>
+        <TextComponent
+          style={{color: '#121212', fontFamily: 'Lexend-SemiBold'}}>
+          {props?.text}
+        </TextComponent>
       </Pressable>
     </View>
   );

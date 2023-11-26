@@ -1,4 +1,4 @@
-import {Lesson, Subject} from '../interfaces/timetable.interfaces';
+import {Lesson, Subject, Timetable} from '../interfaces/timetable.interfaces';
 import asyncStorage from './asyncStorage';
 import {parseTimetable, parseCourseName} from './parser';
 
@@ -27,6 +27,7 @@ export const getWeekType = (date: Date): string => {
   return weekNumber % 2 ? 'p' : 'n';
 };
 
+//genereate array of numbers from start to stop with step
 export const range = (start: number, stop?: number, step?: number) => {
   !stop ? ((stop = start), (start = 0)) : null;
   !step ? (step = 1) : null;
@@ -84,20 +85,6 @@ export const setInitialValues = async (
   }
 };
 
-export const isInitialValuesSet = async () => {
-  try {
-    const course = await asyncStorage.getItem('course');
-    const groups = await asyncStorage.getItem('groups');
-    const language = await asyncStorage.getItem('language');
-    const courseName = await asyncStorage.getItem('courseName');
-
-    return course && groups && language && courseName;
-  } catch (err) {
-    console.error(err, 'in isInitialValuesSet');
-    return false;
-  }
-};
-
 export const fetchTimetable = async (refresh: boolean = false) => {
   try {
     const course = await asyncStorage.getItem('course');
@@ -108,40 +95,10 @@ export const fetchTimetable = async (refresh: boolean = false) => {
     const storedTimetable = await asyncStorage.getItem('timetable');
     const timetable = await parseTimetable(course);
     !storedTimetable || refresh
-      ? (await asyncStorage.setItem('timetable', timetable),
-        console.log('timetable set', course))
+      ? await asyncStorage.setItem('timetable', timetable)
       : null;
   } catch (err) {
     console.error(err, 'in fetchTimetable');
-  }
-};
-
-export const getTimetableByDay = async (day: number, week: string) => {
-  try {
-    const timetable = await asyncStorage.getItem('timetable');
-    const groups = await asyncStorage.getItem('groups');
-
-    const result = timetable[day]
-      ? timetable[day]
-          ?.map(({time, subject}: Lesson) =>
-            subject !== null
-              ? {
-                  time,
-                  subject:
-                    (subject as Subject[])?.filter(
-                      subject =>
-                        groups.includes(subject.group) && subject.week === week,
-                    )[0] || null,
-                }
-              : null,
-          )
-          .filter(
-            (lesson: Lesson) => lesson !== null && lesson.subject !== null,
-          )
-      : null;
-    return result;
-  } catch (err) {
-    console.error(err, 'in getTimetableByDay');
   }
 };
 
