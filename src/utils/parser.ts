@@ -110,6 +110,7 @@ const stripNullValuesFromEdges = (array: Array<any>) => {
 };
 
 const filter = (timetable: Timetable, groups: Array<string>) => {
+  console.log('timetable:', timetable, '\ngroups:', groups);
   const byWeek = (week: string) =>
     timetable.map(
       day =>
@@ -214,7 +215,7 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         },
       ];
 
-      lessonsToInsert.map(lesson => insertLessons(lesson));
+      // lessonsToInsert.map(lesson => insertLessons(lesson));
 
       const deleteLessons = ({lessonIndex, dayIndex, subject}: LessonProps) => {
         for (let idx of lessonIndex as number[]) {
@@ -237,7 +238,7 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         },
       ];
 
-      lessonsToDelete.map(lesson => deleteLessons(lesson));
+      // lessonsToDelete.map(lesson => deleteLessons(lesson));
 
       timetable = filter(timetable, groups);
 

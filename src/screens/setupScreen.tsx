@@ -46,9 +46,9 @@ const SetupScreen = ({
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
   const [courseItems, setCourseItems] = useState([
-    {label: '12A1', value: '22'},
-    {label: '12A2', value: '23'},
-    {label: '12A3', value: '24'},
+    {label: '12A1', value: '19'},
+    {label: '12A2', value: '20'},
+    {label: '12A3', value: '21'},
   ]);
 
   const [englishOpen, setEnglishOpen] = useState(false);
@@ -141,6 +141,11 @@ const SetupScreen = ({
           `k${rawGroups[1]}`,
           `p${rawGroups[2]}`,
           english,
+          english
+            .substring(0, english.length - 1)
+            .split('')
+            .reverse()
+            .join('') + english.substring(english.length - 1, english.length),
           'all',
         ]),
         setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>

@@ -19,12 +19,12 @@ export const addDays = (date: Date, days: number): Date => {
 export const getWeekType = (date: Date): string => {
   const weekNumber = Math.ceil(
     (date.getTime() -
-      24 * 60 * 60 * 1000 -
+      // 24 * 60 * 60 * 1000 - //FIXME
       new Date(date.getFullYear(), 0, 1).getTime()) /
       (7 * 24 * 60 * 60 * 1000),
   );
 
-  return weekNumber % 2 ? 'p' : 'n';
+  return !(weekNumber % 2) ? 'p' : 'n';
 };
 
 //genereate array of numbers from start to stop with step
