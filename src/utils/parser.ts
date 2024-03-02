@@ -24,13 +24,13 @@ const unwrap = (node: any) => {
         const name =
           p.substr(0, 2) === 'J '
             ? p.split(' ').slice(0, 2).join(' ').trim().split('-')[0]
-            : p.split(' ')[0].trim();
+            : p.split(' ').slice(0, -1).join(' ').trim();
 
         let week, teacher;
         try {
           week = p
-            .split(' ')[1]
-            .split('-')[1]
+            .split(' ')
+            [p.split(' ').length - 1].split('-')[1]
             .trim()
             .replace(/[()]/g, '')
             .replace('.', '')
@@ -57,7 +57,11 @@ const unwrap = (node: any) => {
         const t =
           p.substr(0, 2) === 'J '
             ? 'j'
-            : p.trim().split(' ')[1].split('-')[0].toLowerCase();
+            : p
+                .trim()
+                .split(' ')
+                [p.split(' ').length - 1].split('-')[0]
+                .toLowerCase();
 
         let type = t[0];
 
@@ -77,8 +81,9 @@ const unwrap = (node: any) => {
           [index].firstChild.nodeValue.split('-')
           .slice(0, -1)
           .join('-')
-          .split('/')[0];
-        room === 'e-learning' ? (room = 'ONLINE') : null;
+          .split('/')[0]
+          .trim();
+        room.toLowerCase() === 'e-learning' ? (room = 'ONLINE') : null;
 
         return {
           name,
@@ -110,7 +115,7 @@ const stripNullValuesFromEdges = (array: Array<any>) => {
 };
 
 const filter = (timetable: Timetable, groups: Array<string>) => {
-  console.log('timetable:', timetable, '\ngroups:', groups);
+  // console.log('timetable:', timetable, '\ngroups:', groups);
   const byWeek = (week: string) =>
     timetable.map(
       day =>
