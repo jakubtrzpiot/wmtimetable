@@ -43,6 +43,8 @@ const SetupScreen = ({
 
   const color = useContext(ThemeContext);
 
+  const [compact, setCompact] = useState(false);
+
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
   const [courseItems, setCourseItems] = useState([
@@ -63,6 +65,7 @@ const SetupScreen = ({
   const [colorModalOpen, setColorModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    asyncStorage.getItem('compact').then(data => setCompact(data));
     asyncStorage.getItem('language').then(data => {
       data
         ? (asyncStorage
@@ -124,6 +127,7 @@ const SetupScreen = ({
   };
 
   const handleSubmit = () => {
+    asyncStorage.setItem('compact', compact);
     const rawGroups = [lab, computerLab, project].map((el: string) =>
       el.length === 1 ? '0' + el : el,
     );
@@ -254,7 +258,7 @@ const SetupScreen = ({
             onChangeText={text => onChangeProject(text)}
             value={project}
           />
-          <LabeledComponent className="" label="Zmień kolor:">
+          <LabeledComponent className="mb-2" label="Zmień kolor:">
             <IconComponent
               name="palette"
               size={24}
@@ -266,6 +270,15 @@ const SetupScreen = ({
             modalOpen={colorModalOpen}
             setModalOpen={setColorModalOpen}
           />
+
+          <LabeledComponent label="Włączyć tryb kompaktowy?">
+            <SwitchComponent
+              value={compact}
+              left="Nie"
+              right="Tak"
+              onValueChange={() => setCompact(compact => !compact)}
+            />
+          </LabeledComponent>
 
           <ButtonComponent
             full

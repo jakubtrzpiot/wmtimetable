@@ -132,3 +132,4 @@ export default App;
 //TODO maybe add smooth transitions between screens
 //FIXME fix the bug with keyboard not opening when component is too low on the screen
 //TODO scroll to opened card when opening it
+//FIXME language group name not displayed correctly

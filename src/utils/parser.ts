@@ -85,6 +85,9 @@ const unwrap = (node: any) => {
           .trim();
         room.toLowerCase() === 'e-learning' ? (room = 'ONLINE') : null;
 
+        //FIXME: remove this, temporarily disable teachers initals
+        teacher = '';
+
         return {
           name,
           type,
@@ -139,6 +142,7 @@ const filter = (timetable: Timetable, groups: Array<string>) => {
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
   const groups = await asyncStorage.getItem('groups');
+  const do_compact = await asyncStorage.getItem('compact');
   return await fetch(`${WM_URL}o${course}.html`)
     .then(res => {
       if (!res.ok) {
@@ -247,7 +251,39 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
 
       timetable = filter(timetable, groups);
 
-      return timetable;
+      const compact = (timetable: Timetable): Timetable => {
+        return timetable.map(day => {
+          const compacted: Lesson[] = [];
+          let i = 0;
+          while (i < day.length) {
+            const lesson = day[i];
+            if (lesson.subject) {
+              let j = i + 1;
+              while (
+                j < day.length &&
+                day[j]?.subject?.name === lesson.subject.name &&
+                j - i < 3
+              ) {
+                j++;
+              }
+              compacted.push({
+                time: {
+                  start: lesson.time.start,
+                  end: day[j - 1].time.end,
+                },
+                subject: lesson.subject,
+              });
+              i = j;
+            } else {
+              compacted.push(lesson);
+              i++;
+            }
+          }
+          return compacted.filter(lesson => lesson.subject);
+        });
+      };
+
+      return do_compact ? compact(timetable) : timetable;
     })
     .catch(err => err && console.error(err, 'parseTimetable'));
 };
