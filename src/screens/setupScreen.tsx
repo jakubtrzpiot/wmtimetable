@@ -57,9 +57,9 @@ const SetupScreen = ({
   const [englishItems, setEnglishItems] = useState([
     {label: 'DG3', value: 'dg3'},
     {label: 'DG4', value: 'dg4'},
-    {label: 'EB2', value: 'eb2'},
-    {label: 'WG1', value: 'wg1'},
-    {label: 'WG7', value: 'wg7'},
+    {label: 'EB2', value: 'eb1'},
+    {label: 'WG1', value: 'wg5'},
+    // {label: 'WG7', value: 'wg7'},
   ]);
 
   const [colorModalOpen, setColorModalOpen] = useState<boolean>(false);
