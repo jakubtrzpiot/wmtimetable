@@ -1,10 +1,12 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {Modal, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
-import {View, FlatList, Alert} from 'react-native';
+import {View, FlatList, Alert, PlatformColor} from 'react-native';
 import {
   LabeledTextInputComponent,
   ButtonComponent,
   IconComponent,
+  SwitchComponent,
+  LabeledComponent,
 } from '../core';
 import asyncStorage from '../../utils/asyncStorage';
 import {
@@ -48,6 +50,12 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
       '#c5f5f5',
     ].sort(),
   ];
+
+  const [material, setMaterial] = useState(false);
+
+  useEffect(() => {
+    // console.log(PlatformColor('?android:attr/textColor'));
+  });
 
   const useRefresh = useContext(RefreshContext);
 
@@ -104,6 +112,7 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
           <View
             style={{borderColor: colorHex}}
             className={`w-3/4 pt-4 pl-6 pb-6 pr-4 bg-[#121212] border-2 rounded-[32px] flex-col`}>
+            {/* add overlay to stop users from touching other options when material you colors are enabled */}
             <FlatList
               className="py-2"
               data={colors}
@@ -118,7 +127,7 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
                 />
               )}
             />
-            <View className="flex-row items-center justify-between pt-2 mb-4">
+            <View className="flex-row items-center justify-between pt-2">
               <LabeledTextInputComponent
                 label={en ? 'Enter color:' : 'Podaj kolor:'}
                 onChangeText={text => setUserColor(text)}
@@ -137,6 +146,15 @@ const ChangeColorModal = (props: ChangeColorModalProps) => {
                 onPress={() => randomizeColor()}
               />
             </View>
+
+            <LabeledComponent label="MaterialYou" className="mb-4 -mt-2">
+              <SwitchComponent
+                value={material}
+                left="Nie"
+                right="Tak"
+                onValueChange={() => setMaterial(material => !material)}
+              />
+            </LabeledComponent>
             <ButtonComponent
               className="mr-2"
               small

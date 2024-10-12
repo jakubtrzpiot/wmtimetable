@@ -15,8 +15,11 @@ const PickerComponent = (props: any) => {
           paddingVertical: 8,
           borderBottomWidth: 2,
           borderColor: color,
-          backgroundColor: '#121212',
         },
+      }}
+      dropDownContainerStyle={{
+        backgroundColor: '#121212',
+        color: color,
       }}
       labelProps={{
         style: {
@@ -34,12 +37,27 @@ const PickerComponent = (props: any) => {
           justifyContent: 'space-between',
           paddingVertical: 12,
           paddingRight: 6,
-          backgroundColor: '#121212',
         },
       }}
       textStyle={{
         color: color,
         fontFamily: 'Lexend-SemiBold',
+      }}
+      searchContainerStyle={{
+        borderBottomWidth: 0,
+        padding: 0,
+      }}
+      searchTextInputProps={{
+        maxLength: 4,
+        cursorColor: color,
+        placeholderTextColor: color,
+        style: {
+          width: '100%',
+          color: color,
+          fontFamily: 'Lexend-SemiBold',
+          paddingVertical: 6,
+          paddingHorizontal: 0,
+        },
       }}
       {...props}
     />

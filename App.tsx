@@ -133,3 +133,5 @@ export default App;
 //FIXME fix the bug with keyboard not opening when component is too low on the screen
 //TODO scroll to opened card when opening it
 //FIXME language group name not displayed correctly
+// TODO Add mechanic to set first odd week
+// FIXME going into the settings shouldnt refresh the date context

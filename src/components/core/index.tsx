@@ -22,3 +22,6 @@ export {
   ViewComponent,
   PickerComponent,
 };
+
+//TODO switch to export as from like below
+// export {default as ButtonComponent} from './button';

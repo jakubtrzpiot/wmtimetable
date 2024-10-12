@@ -1,6 +1,6 @@
 import {Lesson, Subject, Timetable} from '../interfaces/timetable.interfaces';
 import asyncStorage from './asyncStorage';
-import {parseTimetable, parseCourseName} from './parser';
+import {parseTimetable, parseCourseName, parseCourses} from './parser';
 
 //get day as a number starting from 0 and monday
 export const getDay = (date: Date): number => {
@@ -24,7 +24,7 @@ export const getWeekType = (date: Date): string => {
       (7 * 24 * 60 * 60 * 1000),
   );
 
-  return !(weekNumber % 2) ? 'p' : 'n';
+  return !(weekNumber % 2) ? 'n' : 'p';
 };
 
 //genereate array of numbers from start to stop with step
@@ -105,4 +105,13 @@ export const fetchTimetable = async (refresh: boolean = false) => {
 export const fetchCourseName = async (course: number) => {
   const courseName = await parseCourseName(course);
   return courseName;
+};
+
+export const fetchCourses = async () => {
+  const courses = await parseCourses();
+  // const courses = await parseCourses();
+  // return courses
+  //   .filter(course => course.status == 'fulfilled')
+  //   .map(course => course.value);
+  return courses;
 };

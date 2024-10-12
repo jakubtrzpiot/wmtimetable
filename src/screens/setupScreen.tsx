@@ -14,6 +14,7 @@ import {
   setInitialValues,
   fetchTimetable,
   fetchCourseName,
+  fetchCourses, //TODO
 } from '../utils/helpers';
 import {LanguageContext, RefreshContext, ThemeContext} from '../utils/context';
 import asyncStorage from '../utils/asyncStorage';
@@ -47,19 +48,15 @@ const SetupScreen = ({
 
   /// Picker
   const [courseOpen, setCourseOpen] = useState(false);
-  const [courseItems, setCourseItems] = useState([
-    {label: '12A1', value: '19'},
-    {label: '12A2', value: '20'},
-    {label: '12A3', value: '21'},
-  ]);
-
-  const [englishOpen, setEnglishOpen] = useState(false);
-  const [englishItems, setEnglishItems] = useState([
-    {label: 'DG3', value: 'dg3'},
-    {label: 'DG4', value: 'dg4'},
-    {label: 'EB2', value: 'eb1'},
-    {label: 'WG1', value: 'wg5'},
-    // {label: 'WG7', value: 'wg7'},
+  const [courseItems, setCourseItems] = useState<
+    {value: number; label: string}[]
+  >([
+    //FIXME
+    // {label: '13A1', value: '37'},
+    // {label: '13A4', value: '38'},
+    // {label: '13A6', value: '39'},
+    // {label: '13K1', value: '43'},
+    // {label: '13K2', value: '44'},
   ]);
 
   const [colorModalOpen, setColorModalOpen] = useState<boolean>(false);
@@ -76,7 +73,11 @@ const SetupScreen = ({
                 (setCourse(data),
                 setPreviousCourse(data),
                 fetchCourseName(parseInt(data)).then(
-                  data => (data && setCourseName(data), setLoading(false)),
+                  data => (
+                    console.log(data.label),
+                    data && setCourseName(data.label),
+                    setLoading(false)
+                  ),
                 )),
             ),
           data && setLanguage(data))
@@ -101,13 +102,17 @@ const SetupScreen = ({
                 onChangeProject(group.slice(1));
                 break;
               default:
-                onChangeEnglish(group);
+                onChangeEnglish(group != 'en0' ? group : '');
                 break;
             }
           })
         ),
       )
       .catch(err => console.log(err));
+    fetchCourses().then(courses => {
+      setCourseItems(courses);
+      // console.log(courses);
+    });
   }, []);
 
   const showAlert = (title: string, desc: string) => {
@@ -127,31 +132,37 @@ const SetupScreen = ({
   };
 
   const handleSubmit = () => {
-    asyncStorage.setItem('compact', compact);
+    asyncStorage.setItem('compact', compact); //TODO check it
     const rawGroups = [lab, computerLab, project].map((el: string) =>
       el.length === 1 ? '0' + el : el,
     );
     let groups: string[] = [];
 
-    !(course && lab && computerLab && project && english)
+    !(course && lab && computerLab && project)
       ? (console.log('not all values set'), showAlert('Błąd', 'Sprawdź dane'))
       : parseInt(course) >= 1 &&
         rawGroups.every(
           group => parseInt(group) >= 1 && parseInt(group) <= 7,
         ) &&
-        /^[a-zA-Z]{2}\d?$/.test(english)
+        /^[a-zA-Z]{2}\d?$/.test(english ? english : 'en0')
       ? ((groups = [
           `l${rawGroups[0]}`,
           `k${rawGroups[1]}`,
           `p${rawGroups[2]}`,
-          english,
-          english
-            .substring(0, english.length - 1)
-            .split('')
-            .reverse()
-            .join('') + english.substring(english.length - 1, english.length),
           'all',
         ]),
+        english
+          ? groups.push(
+              english,
+              english
+                .substring(0, english.length - 1)
+                .split('')
+                .reverse()
+                .join('') +
+                english.substring(english.length - 1, english.length),
+            )
+          : groups.push('en0'),
+        // console.log(groups),
         setInitialValues(parseInt(course), groups, 'pl', courseName).then(() =>
           fetchTimetable(true).then(
             () => (
@@ -178,7 +189,7 @@ const SetupScreen = ({
     setCourse(text);
     text
       ? fetchCourseName(parseInt(text))
-          .then(data => data && setCourseName(data))
+          .then(data => data && setCourseName(data.label))
           .catch(err =>
             setCourseName((invert ? !en : en) ? 'Not found' : 'Nie znaleziono'),
           )
@@ -203,7 +214,10 @@ const SetupScreen = ({
             label={en ? 'Select a course:' : 'Wybierz kierunek:'}>
             <PickerComponent
               labeled
-              placeholder={en ? 'Course' : 'Kierunek'}
+              searchable
+              maxHeight={260}
+              searchPlaceholder="Szukaj..."
+              placeholder={courseName ? courseName : en ? 'Course' : 'Kierunek'}
               open={courseOpen}
               value={course}
               items={courseItems}
@@ -211,24 +225,21 @@ const SetupScreen = ({
               setValue={setCourse}
               setItems={setCourseItems}
               onChangeValue={(value: string) => value && onChangeCourse(value)}
-              onOpen={() => setEnglishOpen(false)}
             />
           </LabeledComponent>
-          <LabeledComponent
-            className="mb-5"
-            label={en ? 'English group:' : 'Grupa językowa:'}>
-            <PickerComponent
-              labeled
-              placeholder={en ? 'Group' : 'Grupa'}
-              open={englishOpen}
-              value={english}
-              items={englishItems}
-              setOpen={setEnglishOpen}
-              setValue={onChangeEnglish}
-              setItems={setEnglishItems}
-              onOpen={() => setCourseOpen(false)}
-            />
-          </LabeledComponent>
+          <LabeledTextInputComponent
+            underline
+            className="mb-4"
+            label={
+              en
+                ? 'English group: (you can leave it empty)'
+                : 'Grupa językowa: (można zostawić puste)'
+            }
+            inputMode="text"
+            maxLength={3}
+            onChangeText={text => onChangeEnglish(text)}
+            value={english}
+          />
           <LabeledTextInputComponent
             underline
             className="mb-4"

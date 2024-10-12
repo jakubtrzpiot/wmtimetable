@@ -86,7 +86,7 @@ const unwrap = (node: any) => {
         room.toLowerCase() === 'e-learning' ? (room = 'ONLINE') : null;
 
         //FIXME: remove this, temporarily disable teachers initals
-        teacher = '';
+        teacher = type == 'j' ? group : '';
 
         return {
           name,
@@ -127,23 +127,26 @@ const filter = (timetable: Timetable, groups: Array<string>) => {
           day.map(({time, subject}: Lesson) => ({
             time,
             subject:
-              (subject as Subject[])?.filter(
-                subject =>
-                  groups.includes(subject.group) && subject.week.includes(week),
-              )[0] || null,
+              (subject as Subject[])?.filter(subject => {
+                if (subject.week.includes(week)) {
+                  if (groups.includes('en0') && subject.type == 'j')
+                    return true;
+                  if (groups.includes(subject.group)) return true;
+                }
+              })[0] || null,
           })),
         ),
     );
 
   const result = [...byWeek('n'), [], [], ...byWeek('p'), [], []];
-  // console.log(result);
+  // console.log('Filter result', result);
   return result;
 };
 
 export const parseTimetable = async (course: number): Promise<Timetable> => {
   const groups = await asyncStorage.getItem('groups');
   const do_compact = await asyncStorage.getItem('compact');
-  return await fetch(`${WM_URL}o${course}.html`)
+  return await fetch(`${WM_URL}/plany/o${course}.html`)
     .then(res => {
       if (!res.ok) {
         throw new Error('Network response was not ok.');
@@ -196,36 +199,6 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
           timetable[dayIndex][idx].subject.push(subject);
         }
       };
-
-      const lessonsToInsert: LessonProps[] = [
-        {
-          dayIndex: 0,
-          lessonIndex: [10, 11],
-          subject: {
-            name: 'J angielski',
-            group: 'dg3',
-            week: 'pn',
-            type: 'j',
-            teacher: 'DG',
-            room: 'IDK',
-          },
-        },
-        {
-          dayIndex: 0,
-          lessonIndex: [12, 13],
-          subject: {
-            name: 'J angielski',
-            group: 'dg4',
-            week: 'pn',
-            type: 'j',
-            teacher: 'DG',
-            room: 'IDK',
-          },
-        },
-      ];
-
-      // lessonsToInsert.map(lesson => insertLessons(lesson));
-
       const deleteLessons = ({lessonIndex, dayIndex, subject}: LessonProps) => {
         for (let idx of lessonIndex as number[]) {
           let subjectIndex = 0;
@@ -239,16 +212,6 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         }
       };
 
-      const lessonsToDelete: LessonProps[] = [
-        {
-          dayIndex: 4,
-          lessonIndex: [10, 11, 12, 13],
-          subject: {name: 'J angielski'},
-        },
-      ];
-
-      // lessonsToDelete.map(lesson => deleteLessons(lesson));
-
       timetable = filter(timetable, groups);
 
       const compact = (timetable: Timetable): Timetable => {
@@ -261,7 +224,10 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
               let j = i + 1;
               while (
                 j < day.length &&
+                //@ts-expect-error
                 day[j]?.subject?.name === lesson.subject.name &&
+                //@ts-expect-error
+                day[j]?.subject?.type === lesson.subject.type &&
                 j - i < 3
               ) {
                 j++;
@@ -283,14 +249,53 @@ export const parseTimetable = async (course: number): Promise<Timetable> => {
         });
       };
 
-      return do_compact ? compact(timetable) : timetable;
+      const res = do_compact ? compact(timetable) : timetable;
+      // console.log(res);
+      return res;
     })
     .catch(err => err && console.error(err, 'parseTimetable'));
 };
 
 //parse course name
-export const parseCourseName = async (course: number): Promise<string> => {
-  return await fetch(`${WM_URL}o${course}.html`)
+
+interface courseProps {
+  label: string;
+  value: number;
+}
+
+// export const parseCourses = (): Promise<
+//   PromiseSettledResult<courseProps>[]
+// > => {
+//   let courses = Array.from(Array(125).keys()).map(
+//     async n => await parseCourseName(n),
+//   );
+//   return Promise.allSettled(courses);
+// };
+export const parseCourses = async (): Promise<courseProps[]> => {
+  return await fetch(`${WM_URL}/lista.html`)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      return res.text();
+    })
+    .then(html => {
+      const doc = new parser().parseFromString(
+        html.replace(/(\r\n|\n|\r)/gm, ''),
+        'text/html',
+      );
+      const courses = doc
+        .querySelect('#oddzialy a[href="plany/o"]')
+        .map((node: any) => ({
+          label: node.childNodes[0].nodeValue,
+          value: node.attributes[0].nodeValue.replace(/[^0-9]/g, ''),
+        }));
+      return courses;
+    });
+};
+
+export const parseCourseName = async (course: number): Promise<courseProps> => {
+  return await fetch(`${WM_URL}/plany/o${course}.html`)
     .then(res => {
       if (!res.ok) {
         throw new Error('Network response was not ok.');
@@ -303,7 +308,10 @@ export const parseCourseName = async (course: number): Promise<string> => {
         'text/html',
       );
 
-      return doc.getElementsByAttribute('class', 'tytulnapis')[0].firstChild
-        .nodeValue;
+      return {
+        label: doc.getElementsByAttribute('class', 'tytulnapis')[0].firstChild
+          .nodeValue,
+        value: course,
+      };
     });
 };
