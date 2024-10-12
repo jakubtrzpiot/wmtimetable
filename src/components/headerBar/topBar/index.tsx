@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {View, Linking} from 'react-native';
 import WeekDay from './weekDay';
 import WeekType from './weekType';
 import {IconComponent} from '../../core';
@@ -35,6 +35,12 @@ const TopBar: React.FC<TopBarProps> = ({week}: TopBarProps) => {
         <WeekType weekType={week} />
       </View>
       <View className="flex-row items-center justify-end">
+        <IconComponent
+          className="pr-5 pt-3"
+          name="message-alert-outline"
+          size={24}
+          onPress={() => Linking.openURL(`https://docs.google.com/forms/d/e/1FAIpQLSdrdgDL3sN_LmHwEqeJ5538twzdcLqBzYHI_y8SPnJabYFA8g/viewform?usp=pp_url&entry.728268028=${courseName}&entry.1423143424=`)}
+        />
         {noteCount !== 0 && (
           <IconComponent
             className="px-5 py-2"
